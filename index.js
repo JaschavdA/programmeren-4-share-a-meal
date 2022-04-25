@@ -1,3 +1,5 @@
+//API base URL: https://share-a-meal-2022.herokuapp.com/
+
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
