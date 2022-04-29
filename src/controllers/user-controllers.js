@@ -1,9 +1,35 @@
 const req = require("express/lib/request");
 
+// TODO: Start using this to validate input
+const assert = require("assert");
+
 let database = [];
 let id = 0;
 
 let controller = {
+  validateUser: (req, res, next) => {
+    let user = req.body;
+
+    let { emailAddress, firstName, lastName } = user;
+    try {
+      assert(typeof emailAddress === "string", "Email must be a string");
+      assert(typeof firstName === "string", "firstName must be a string");
+      assert(typeof lastName === "string", "lastName must be a string");
+      next();
+    } catch (err) {
+      const error = {
+        status: 400,
+        message: err.message,
+      };
+      console.log(error);
+      res.status(400).json({
+        status: 400,
+        message: error.toString(),
+      });
+      next(error);
+    }
+  },
+
   addUser: (req, res) => {
     const user = req.body;
 

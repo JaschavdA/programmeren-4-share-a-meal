@@ -6,6 +6,7 @@ const port = process.env.PORT || 3000;
 
 const bodyParser = require("body-parser");
 const router = require("./src/routes/user-routes");
+const res = require("express/lib/response");
 app.use(bodyParser.json());
 app.use(router);
 
@@ -21,6 +22,12 @@ app.all("*", (req, res) => {
   });
 });
 
+app.use((err, req, res, next) => {
+  res.status(err.status).json(err);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
+
+module.exports = app;
