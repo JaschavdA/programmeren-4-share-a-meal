@@ -95,20 +95,60 @@ let controller = {
     });
   },
 
+  // getAllUsers: (req, res) => {
+  //   dbconnection.getConnection(function (err, connection) {
+  //     if (err) throw err; // not connected!
+
+  //     // Use the connection
+  //     connection.query("SELECT * FROM user", function (error, results, fields) {
+  //       // When done with the connection, release it.
+  //       connection.release();
+
+  //       // Handle error after the release.
+  //       if (error) throw error;
+
+  //       console.log("#results = ", results.length);
+  //       console.log(results);
+  //       res.status(200).json({
+  //         status: 200,
+  //         result: results,
+  //       });
+
+  //       // pool.end((err) => {
+  //       //   console.log("pool was closed");
+  //       // });
+  //     });
+  //   });
+  // },
+
   getUserById: (req, res) => {
-    const userID = req.params.userID;
-    const user = database.filter((item) => item.id == userID);
-    if (user.length > 0) {
-      res.status(200).json({
-        status: 200,
-        result: user,
-        extra_info: "authorization has not yet been implemented",
-      });
-    } else
-      res.status(404).json({
-        status: 404,
-        message: `User with id: ${userID} was not found`,
-      });
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+
+      // Use the connection
+      const id = req.params.userID;
+      connection.query(
+        `SELECT * FROM user WHERE id = ${id}`,
+        function (error, results, fields) {
+          // When done with the connection, release it.
+          connection.release();
+
+          // Handle error after the release.
+          if (error) throw error;
+
+          console.log("#results = ", results.length);
+          console.log(results);
+          res.status(200).json({
+            status: 200,
+            result: results,
+          });
+
+          // pool.end((err) => {
+          //   console.log("pool was closed");
+          // });
+        }
+      );
+    });
   },
 
   updateUser: (req, res) => {
