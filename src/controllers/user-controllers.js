@@ -95,7 +95,6 @@ let controller = {
     });
   },
 
-  //Gets user by id
   getUserById: (req, res) => {
     dbconnection.getConnection(function (err, connection) {
       if (err) throw err; // not connected!
