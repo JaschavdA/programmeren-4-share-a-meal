@@ -1,6 +1,7 @@
 const req = require("express/lib/request");
 const dbconnection = require("../../database/dbconnection");
 // TODO: Start using this to validate input
+//TODO: add all inputs
 const assert = require("assert");
 
 let database = [];
@@ -10,9 +11,9 @@ let controller = {
   validateUser: (req, res, next) => {
     let user = req.body;
 
-    let { emailAddress, firstName, lastName } = user;
+    let { emailAdress, firstName, lastName } = user;
     try {
-      assert(typeof emailAddress === "string", "Email must be a string");
+      assert(typeof emailAdress === "string", "Email must be a string");
       assert(typeof firstName === "string", "firstName must be a string");
       assert(typeof lastName === "string", "lastName must be a string");
       next();
@@ -31,35 +32,64 @@ let controller = {
   },
 
   addUser: (req, res) => {
-    const user = req.body;
+    // const user = req.body;
 
-    let error = verifyInput(user);
-    const userExists = database.filter(
-      (item) => item.emailAddress == user.emailAddress
-    );
+    // let error = verifyInput(user);
+    // const userExists = database.filter(
+    //   (item) => item.emailAddress == user.emailAddress
+    // );
 
-    if (error.error || userExists.length > 0) {
-      let errorMessage = error.errorMessage;
-      if (userExists.length > 0) {
-        errorMessage.push("A user with that email address already exists");
-      }
-      res.status(409).json({
-        status: 409,
-        message: error.errorMessage,
-        error: "Bad Request",
-      });
-    } else {
-      id++;
-      let userToAdd = {
-        id,
-        ...user,
-      };
-      database.push(userToAdd);
-      res.status(200).json({
-        status: 200,
-        result: userToAdd,
-      });
-    }
+    // if (error.error || userExists.length > 0) {
+    //   let errorMessage = error.errorMessage;
+    //   if (userExists.length > 0) {
+    //     errorMessage.push("A user with that email address already exists");
+    //   }
+    //   res.status(409).json({
+    //     status: 409,
+    //     message: error.errorMessage,
+    //     error: "Bad Request",
+    //   });
+    // } else {
+    //   id++;
+    //   let userToAdd = {
+    //     id,
+    //     ...user,
+    //   };
+    //   database.push(userToAdd);
+    //   res.status(200).json({
+    //     status: 200,
+    //     result: userToAdd,
+    //   });
+    // }
+
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+
+      // Use the connection
+      const user = req.body;
+
+      connection.query(
+        `INSERT INTO user (firstName, lastName, street, city, password, emailAdress) VALUES ('${user.firstName}', '${user.lastName}', '${user.street}', '${user.city}', '${user.password}', '${user.emailAdress}')`,
+        function (error, results, fields) {
+          // When done with the connection, release it.
+          connection.release();
+
+          // Handle error after the release.
+          if (error) throw error;
+
+          console.log("#results = ", results.length);
+          console.log(results);
+          res.status(200).json({
+            status: 200,
+            result: results,
+          });
+
+          // pool.end((err) => {
+          //   console.log("pool was closed");
+          // });
+        }
+      );
+    });
   },
 
   getAllUsers: (req, res) => {
