@@ -1,6 +1,5 @@
 const req = require("express/lib/request");
 const dbconnection = require("../../database/dbconnection");
-// TODO: Start using this to validate input
 //TODO: add all inputs
 const assert = require("assert");
 
@@ -25,7 +24,7 @@ let controller = {
       console.log(error);
       res.status(400).json({
         status: 400,
-        message: error.toString(),
+        message: error.message,
       });
       next(error);
     }
@@ -154,12 +153,17 @@ let controller = {
               message:
                 "There's already a user registered with this email address",
             });
-          } else {
+          } else if (results.affectedRows > 0) {
             console.log("#results = ", results.length);
             console.log(results);
             res.status(200).json({
               status: 200,
               result: "User Successfully updated",
+            });
+          } else {
+            res.status(400).json({
+              status: 400,
+              message: `user with id: ${id} could not be found`,
             });
           }
         }
@@ -180,18 +184,20 @@ let controller = {
           connection.release();
 
           // Handle error after the release.
-          if (error) throw error;
-
-          console.log("#results = ", results.length);
-          console.log(results);
-          res.status(200).json({
-            status: 200,
-            result: results,
-          });
-
-          // pool.end((err) => {
-          //   console.log("pool was closed");
-          // });
+          if (error) {
+            console.log(error);
+          }
+          if (results.affectedRows > 0) {
+            res.status(200).json({
+              status: 200,
+              message: `user with id: ${id} has been deleted`,
+            });
+          } else {
+            res.status(400).json({
+              status: 400,
+              message: `user with id: ${id} could not be found`,
+            });
+          }
         }
       );
     });
