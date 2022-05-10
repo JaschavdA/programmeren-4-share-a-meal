@@ -11,11 +11,14 @@ let controller = {
   validateUser: (req, res, next) => {
     let user = req.body;
 
-    let { emailAdress, firstName, lastName } = user;
+    let { emailAdress, firstName, lastName, street, city, password } = user;
     try {
       assert(typeof emailAdress === "string", "Email must be a string");
       assert(typeof firstName === "string", "firstName must be a string");
       assert(typeof lastName === "string", "lastName must be a string");
+      assert(typeof street === "string", "street must be a string");
+      assert(typeof city === "string", "city must be a string");
+      assert(password.length > 0, "password may not be empty");
       next();
     } catch (err) {
       const error = {
@@ -29,6 +32,44 @@ let controller = {
       });
       next(error);
     }
+  },
+
+  validateEmailCreateUser: (req, res, next) => {
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+
+      // Use the connection
+      const user = req.body;
+
+      connection.query(
+        `SELECT emailAdress FROM USER WHERE emailAdress = ${user.emailAdress}`,
+        function (error, results, fields) {
+          // When done with the connection, release it.
+          connection.release();
+
+          // Handle error after the release.
+          if (error) throw error;
+
+          try {
+            assert(
+              results.length < 1,
+              "There's already a user registered with this email address"
+            );
+          } catch (err) {
+            const error = {
+              status: 409,
+              message: err.message,
+            };
+            console.log(error);
+            res.status(409).json({
+              status: 409,
+              message: error.toString(),
+            });
+            next(error);
+          }
+        }
+      );
+    });
   },
 
   addUser: (req, res) => {
@@ -62,6 +103,7 @@ let controller = {
     //   });
     // }
 
+    //TODO: error handling and input validation
     dbconnection.getConnection(function (err, connection) {
       if (err) throw err; // not connected!
 
@@ -156,48 +198,65 @@ let controller = {
   },
 
   updateUser: (req, res) => {
-    const userID = req.params.userID;
-    const updatedUser = req.body;
-    const index = database.findIndex((item) => item.id == userID);
-    if (index < 0) {
-      res.status(404).json({
-        status: 404,
-        message: `User with id: ${userID} was not found`,
-      });
-    }
-    const inputError = verifyInput(updatedUser);
-    if (inputError.error) {
-      res.status(400).json({
-        statusbar: 400,
-        message: inputError.errorMessage,
-        test: updatedUser,
-      });
-    } else {
-      database[index] = { id, ...updatedUser };
-      res.status(200).json({
-        status: 200,
-        result: database[index],
-        extra_info: "Authorization is not implemented yet",
-      });
-    }
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+
+      // Use the connection
+      const user = req.body;
+      //`INSERT INTO user (firstName, lastName, street, city, password, emailAdress)
+      id = req.params.userID;
+      connection.query(
+        `UPDATE user SET firstName = '${user.firstName}', lastName = '${user.lastName}', street = '${user.street}', city = '${user.city}', password = '${user.password}', emailAdress = '${user.emailAdress}' WHERE id = ${id}`,
+        function (error, results, fields) {
+          // When done with the connection, release it.
+          connection.release();
+
+          // Handle error after the release.
+          if (error) throw error;
+
+          console.log("#results = ", results.length);
+          console.log(results);
+          res.status(200).json({
+            status: 200,
+            result: results,
+          });
+
+          // pool.end((err) => {
+          //   console.log("pool was closed");
+          // });
+        }
+      );
+    });
   },
 
   deleteUserById: (req, res) => {
-    const userID = req.params.userID;
-    const index = database.findIndex((item) => item.id == userID);
-    if (index >= 0) {
-      database.splice(index, 1);
-      res.status(200).json({
-        status: 200,
-        message: `User with id: ${userID} was deleted`,
-        extra_info: "Authorization is not yet implemented.",
-      });
-    } else {
-      res.status(404).json({
-        status: 404,
-        message: `User with id: ${userID} was not found`,
-      });
-    }
+    dbconnection.getConnection(function (err, connection) {
+      if (err) throw err; // not connected!
+
+      // Use the connection
+      const id = req.params.userID;
+      connection.query(
+        `DELETE FROM user WHERE id = ${id}`,
+        function (error, results, fields) {
+          // When done with the connection, release it.
+          connection.release();
+
+          // Handle error after the release.
+          if (error) throw error;
+
+          console.log("#results = ", results.length);
+          console.log(results);
+          res.status(200).json({
+            status: 200,
+            result: results,
+          });
+
+          // pool.end((err) => {
+          //   console.log("pool was closed");
+          // });
+        }
+      );
+    });
   },
 };
 
