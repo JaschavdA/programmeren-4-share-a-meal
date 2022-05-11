@@ -56,7 +56,7 @@ let controller = {
                 const returnValue = { id, ...user };
                 res.status(201).json({
                   status: 201,
-                  result: user,
+                  result: returnValue,
                 });
               }
             );

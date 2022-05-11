@@ -24,7 +24,9 @@ describe("share-a-meal API", () => {
         connection.query(
           "DELETE IGNORE FROM user; ",
           function (error, results, fields) {
-            if (error) throw error;
+            if (error) {
+              console.log(error);
+            }
           }
         );
 
@@ -32,7 +34,9 @@ describe("share-a-meal API", () => {
           "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (1, 'first', 'last', 'street', 'city', 'password', 'email@test.com');",
           function (error, results, fields) {
             connection.release;
-            if (error) throw error;
+            if (error) {
+              console.log(error);
+            }
 
             done();
           }
