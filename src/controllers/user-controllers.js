@@ -45,18 +45,18 @@ let controller = {
             });
             //if there is no error, give response showing success
           } else {
-            connection.query(
-              `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
-              function (error, results, fields) {
-                connection.release();
+            // connection.query(
+            //   `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
+            //   function (error, results, fields) {
+            //     connection.release();
 
-                console.log(results[0].id);
+            //     console.log(results[0].id);
 
-                id = results[0].id;
-                const returnValue = { id, ...user };
+            //     id = results[0].id;
+                // const returnValue = { id, ...user };
                 res.status(201).json({
                   status: 201,
-                  result: returnValue,
+                  result: user,
                 });
               }
             );
