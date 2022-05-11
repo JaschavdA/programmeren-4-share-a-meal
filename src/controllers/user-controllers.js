@@ -35,7 +35,6 @@ let controller = {
         `INSERT INTO user (firstName, lastName, street, city, password, emailAdress) VALUES ('${user.firstName}', '${user.lastName}', '${user.street}', '${user.city}', '${user.password}', '${user.emailAdress}')`,
         function (error, results, fields) {
           // When done with the connection, release it.
-          connection.release();
 
           // Handle error after the release.
           if (error) {
@@ -50,8 +49,9 @@ let controller = {
               `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
               function (error, results, fields) {
                 connection.release();
-
-                console.log(results[0].id);
+                if (error) {
+                  console.log(error);
+                }
 
                 id = results[0].id;
                 const returnValue = { id, ...user };
