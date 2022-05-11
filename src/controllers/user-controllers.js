@@ -43,7 +43,7 @@ let controller = {
               message:
                 "There's already a user registered with this email address",
             });
-            //if there is no error, give response showing success
+            //if there is no error, give response showing success.
           } else {
             // connection.query(
             //   `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
