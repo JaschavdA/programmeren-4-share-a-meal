@@ -53,13 +53,17 @@ let controller = {
             //     console.log(results[0].id);
 
             //     id = results[0].id;
-                // const returnValue = { id, ...user };
-                res.status(201).json({
-                  status: 201,
-                  result: user,
-                });
-              }
-            );
+            //     const returnValue = { id, ...user };
+            //     res.status(201).json({
+            //       status: 201,
+            //       result: user,
+            //     });
+            //   }
+            // );
+            res.status(201).json({
+              status: 201,
+              result: user,
+            });
           }
         }
       );
