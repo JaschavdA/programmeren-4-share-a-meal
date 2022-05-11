@@ -45,27 +45,27 @@ let controller = {
             });
             //if there is no error, give response showing success
           } else {
-            connection.query(
-              `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
-              function (error, results, fields) {
-                connection.release();
-                if (error) {
-                  console.log(error);
-                }
+            // connection.query(
+            //   `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
+            //   function (error, results, fields) {
+            //     connection.release();
+            //     if (error) {
+            //       console.log(error);
+            //     }
 
-                id = results[0].id;
-                const returnValue = { id, ...user };
-                res.status(201).json({
-                  status: 201,
-                  result: returnValue,
-                });
-              }
-            );
+            //     id = results[0].id;
+            //     const returnValue = { id, ...user };
+            //     res.status(201).json({
+            //       status: 201,
+            //       result: returnValue,
+            //     });
+            //   }
+            // );
 
-            // res.status(201).json({
-            //   status: 201,
-            //   result: { id, user },
-            // });
+            res.status(201).json({
+              status: 201,
+              result: { id, user },
+            });
           }
         }
       );
