@@ -17,18 +17,11 @@ let controller = {
       assert(password.length > 0, "password may not be empty");
       next();
     } catch (err) {
-      const error = {
-        status: 400,
-        message: err.message,
-      };
-      console.log(error);
       res.status(400).json({
         status: 400,
-        message: error.message,
+        message: err.message,
       });
-      next(error);
     }
-    next();
   },
 
   addUser: (req, res) => {
@@ -51,12 +44,11 @@ let controller = {
               message:
                 "There's already a user registered with this email address",
             });
+            //if there is no error, give response showing success
           } else {
-            console.log("#results = ", results.length);
-            console.log(results);
             res.status(201).json({
               status: 201,
-              message: "User added successfully",
+              result: user,
             });
           }
         }
@@ -76,8 +68,6 @@ let controller = {
         // Handle error after the release.
         if (error) throw error;
 
-        console.log("#results = ", results.length);
-        console.log(results);
         res.status(200).json({
           status: 200,
           result: results,
@@ -114,8 +104,6 @@ let controller = {
           if (error) throw error;
 
           if (results.length > 0) {
-            console.log("#results = ", results.length);
-            console.log(results);
             res.status(200).json({
               status: 200,
               result: results,
@@ -133,7 +121,7 @@ let controller = {
 
   updateUser: (req, res) => {
     const id = req.params.userID;
-    console.log(id);
+
     const user = req.body;
     dbconnection.getConnection(function (err, connection) {
       if (err) throw err; // not connected!
@@ -154,8 +142,6 @@ let controller = {
                 "There's already a user registered with this email address",
             });
           } else if (results.affectedRows > 0) {
-            console.log("#results = ", results.length);
-            console.log(results);
             res.status(200).json({
               status: 200,
               result: "User Successfully updated",
@@ -184,9 +170,8 @@ let controller = {
           connection.release();
 
           // Handle error after the release.
-          if (error) {
-            console.log(error);
-          }
+          // if (error) console.log(error);
+
           if (results.affectedRows > 0) {
             res.status(200).json({
               status: 200,

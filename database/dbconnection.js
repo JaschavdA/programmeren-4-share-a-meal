@@ -10,7 +10,6 @@ const pool = mysql.createPool({
 });
 
 module.exports = pool;
-//test
 
 pool.on("acquire", function (connection) {
   console.log("Connection %d acquired", connection.threadId);
