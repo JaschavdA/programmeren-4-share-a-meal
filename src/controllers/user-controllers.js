@@ -76,7 +76,9 @@ let controller = {
         connection.release();
 
         // Handle error after the release.
-        if (error) throw error;
+        if (error) {
+          console.log(error);
+        }
 
         res.status(200).json({
           status: 200,
@@ -107,7 +109,9 @@ let controller = {
           connection.release();
 
           // Handle error after the release.
-          if (error) throw error;
+          if (error) {
+            console.log(error);
+          }
 
           if (results.length > 0) {
             res.status(200).json({
