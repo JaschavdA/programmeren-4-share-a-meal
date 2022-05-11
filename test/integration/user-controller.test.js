@@ -320,21 +320,9 @@ describe("share-a-meal API", () => {
         });
     });
 
-    // it("TC-206-1 should give error if user does not exits", (done) => {
-    //   chai
-    //     .request(server)
-    //     .delete("/api/user/2")
-    //     .end((err, res) => {
-    //       assert.ifError(err);
-    //       res.should.have.status(400);
-    //       done();
-    //     });
-    // });
-
-    // it("bug workaround", (done) => {
-    //   assert.equal(true, true);
-    //   done();
-    // });
+    it("TC205-should give a correct error message if the user does not exits", (done) => {
+      chai.request(server).put("/api/user/1");
+    });
 
     it("TC-206-1 should give correct user if ID is not found", (done) => {
       chai
