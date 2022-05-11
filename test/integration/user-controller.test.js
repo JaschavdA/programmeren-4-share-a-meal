@@ -13,17 +13,12 @@ chai.use(chaiHttp);
 
 describe("share-a-meal API", () => {
   before((done) => {
-    console.log(
-      "before: hier zorg je eventueel dat de precondities correct zijn"
-    );
-    console.log("before done");
     done();
     //INSERT INTO user (firstName, lastName, street, city, password, emailAdress) VALUES ('first', 'last', 'street', 'city', 'password', 'email@test.com');
   });
 
   describe("UC 201 Create user", () => {
     beforeEach((done) => {
-      console.log("before each called");
       dbconnection.getConnection(function (err, connection) {
         if (err) throw err;
         connection.query(
@@ -38,7 +33,7 @@ describe("share-a-meal API", () => {
           function (error, results, fields) {
             connection.release;
             if (error) throw error;
-            console.log("beforeEach done");
+
             done();
           }
         );
@@ -145,7 +140,6 @@ describe("share-a-meal API", () => {
 
   describe("UC 202 get user", () => {
     beforeEach((done) => {
-      console.log("before each called");
       dbconnection.getConnection(function (err, connection) {
         if (err) throw err;
         connection.query(
@@ -153,7 +147,7 @@ describe("share-a-meal API", () => {
           function (error, results, fields) {
             connection.release;
             if (error) throw error;
-            console.log("beforeEach done");
+
             done();
           }
         );
@@ -176,67 +170,60 @@ describe("share-a-meal API", () => {
           done();
         });
     });
+  });
 
-    describe("UC 202 get user", () => {
-      beforeEach((done) => {
-        console.log("before each called");
-        dbconnection.getConnection(function (err, connection) {
-          connection.query(
-            "DELETE IGNORE FROM user; ",
-            function (error, results, fields) {
-              if (error) throw error;
-              console.log("beforeEach done");
-            }
-          );
+  describe("UC 202 get user", () => {
+    beforeEach((done) => {
+      dbconnection.getConnection(function (err, connection) {
+        connection.query(
+          "DELETE IGNORE FROM user; ",
+          function (error, results, fields) {
+            if (error) throw error;
+          }
+        );
 
-          if (err) throw err;
-          connection.query(
-            "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (1,'first', 'last', 'street', 'city', 'password', 'email@test.com');",
-            function (error, results, fields) {
-              if (error) throw error;
-              console.log("beforeEach done");
-            }
-          );
+        if (err) throw err;
+        connection.query(
+          "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (1,'first', 'last', 'street', 'city', 'password', 'email@test.com');",
+          function (error, results, fields) {
+            if (error) throw error;
+          }
+        );
 
-          connection.query(
-            "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (2, 'first2', 'last2', 'street2', 'city2', 'password2', 'email@test2.com');",
-            function (error, results, fields) {
-              connection.release;
-              if (error) throw error;
-              console.log("beforeEach done");
-              done();
-            }
-          );
+        connection.query(
+          "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (2, 'first2', 'last2', 'street2', 'city2', 'password2', 'email@test2.com');",
+          function (error, results, fields) {
+            connection.release;
+            if (error) throw error;
+          }
+        );
+        done();
+      });
+    });
+
+    it("TC-202-2 should 2 correct items if DB has 2 items", (done) => {
+      chai
+        .request(server)
+        .get("/api/user")
+        .end((err, res) => {
+          assert.ifError(err);
+          res.should.have.status(200);
+          res.should.be.an("object");
+          res.body.should.be.an("object");
+          res.body.should.be.an("object").that.has.all.keys("status", "result");
+          let { status, result } = res.body;
+          status.should.be.a("number");
+          result.should.be.an("array").that.has.length(2);
+          result[0].emailAdress.should.equal("email@test.com");
+          result[1].emailAdress.should.equal("email@test2.com");
+
+          done();
         });
-      });
-
-      it("TC-202-2 should 2 correct items if DB has 2 items", (done) => {
-        chai
-          .request(server)
-          .get("/api/user")
-          .end((err, res) => {
-            assert.ifError(err);
-            res.should.have.status(200);
-            res.should.be.an("object");
-            res.body.should.be.an("object");
-            res.body.should.be
-              .an("object")
-              .that.has.all.keys("status", "result");
-            let { status, result } = res.body;
-            status.should.be.a("number");
-            result.should.be.an("array").that.has.length(2);
-            result[0].emailAdress.should.equal("email@test.com");
-            result[1].emailAdress.should.equal("email@test2.com");
-
-            done();
-          });
-      });
     });
   });
 
   describe("UC 203 get profile", () => {
     beforeEach((done) => {
-      console.log("before each called");
       dbconnection.getConnection(function (err, connection) {
         if (err) throw err;
         connection.query(
@@ -244,7 +231,7 @@ describe("share-a-meal API", () => {
           function (error, results, fields) {
             connection.release;
             if (error) throw error;
-            console.log("beforeEach done");
+
             done();
           }
         );
@@ -274,7 +261,6 @@ describe("share-a-meal API", () => {
 
   describe("UC 204 get profile by ID", () => {
     beforeEach((done) => {
-      console.log("before each called");
       dbconnection.getConnection(function (err, connection) {
         connection.query(
           "DELETE IGNORE FROM user; ",
@@ -286,7 +272,6 @@ describe("share-a-meal API", () => {
         connection.query(
           "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (1, 'first', 'last', 'street', 'city', 'password', 'email@test.com');",
           function (error, results, fields) {
-            console.log(results);
             connection.release;
             if (error) throw error;
             console.log("beforeEach done");
@@ -295,34 +280,6 @@ describe("share-a-meal API", () => {
         );
       });
     });
-
-    it("TC-204-3 should give correct user if ID is found", (done) => {
-      chai
-        .request(server)
-        .get("/api/user/1")
-        .end((err, res) => {
-          assert.ifError(err);
-          res.should.have.status(200);
-          res.should.be.an("object");
-          res.body.should.be.an("object");
-          res.body.should.be.an("object").that.has.all.keys("status", "result");
-          let { status, result } = res.body;
-          status.should.be.a("number");
-          result.should.be.an("array").that.has.length(1);
-          result[0].id.should.equal(1);
-          result[0].firstName.should.equal("first");
-          result[0].lastName.should.equal("last");
-          result[0].street.should.equal("street");
-          result[0].city.should.equal("city");
-          result[0].password.should.equal("password");
-          result[0].emailAdress.should.equal("email@test.com");
-          done();
-        });
-    });
-
-    // it("TC205-should give a correct error message if the user does not exits", (done) => {
-    //   chai.request(server).put("/api/user/1");
-    // });
 
     it("TC-206-1 should give correct user if ID is not found", (done) => {
       chai
@@ -346,7 +303,31 @@ describe("share-a-meal API", () => {
     });
   });
 
-  it("TC-206-2 should give correct user if ID is found", (done) => {
+  it("TC-204-3 should give correct user if ID is found", (done) => {
+    chai
+      .request(server)
+      .get("/api/user/1")
+      .end((err, res) => {
+        assert.ifError(err);
+        res.should.have.status(200);
+        res.should.be.an("object");
+        res.body.should.be.an("object");
+        res.body.should.be.an("object").that.has.all.keys("status", "result");
+        let { status, result } = res.body;
+        status.should.be.a("number");
+        result.should.be.an("array").that.has.length(1);
+        result[0].id.should.equal(1);
+        result[0].firstName.should.equal("first");
+        result[0].lastName.should.equal("last");
+        result[0].street.should.equal("street");
+        result[0].city.should.equal("city");
+        result[0].password.should.equal("password");
+        result[0].emailAdress.should.equal("email@test.com");
+        done();
+      });
+  });
+
+  it("TC-206-1 should give correct user if ID is found", (done) => {
     chai
       .request(server)
       .delete("/api/user/1")

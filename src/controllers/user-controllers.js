@@ -82,10 +82,6 @@ let controller = {
           status: 200,
           result: results,
         });
-
-        // pool.end((err) => {
-        //   console.log("pool was closed");
-        // });
       });
     });
   },
@@ -136,8 +132,6 @@ let controller = {
     dbconnection.getConnection(function (err, connection) {
       if (err) throw err; // not connected!
       // Use the connection
-
-      //`INSERT INTO user (firstName, lastName, street, city, password, emailAdress)
 
       connection.query(
         `UPDATE user SET firstName = '${user.firstName}', lastName = '${user.lastName}', street = '${user.street}', city = '${user.city}', password = '${user.password}', emailAdress = '${user.emailAdress}' WHERE id = ${id}`,
