@@ -62,10 +62,10 @@ let controller = {
               }
             );
 
-            res.status(201).json({
-              status: 201,
-              result: { id, user },
-            });
+            // res.status(201).json({
+            //   status: 201,
+            //   result: { id, user },
+            // });
           }
         }
       );
