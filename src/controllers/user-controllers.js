@@ -35,6 +35,7 @@ let controller = {
         `INSERT INTO user (firstName, lastName, street, city, password, emailAdress) VALUES ('${user.firstName}', '${user.lastName}', '${user.street}', '${user.city}', '${user.password}', '${user.emailAdress}')`,
         function (error, results, fields) {
           // When done with the connection, release it.
+          connection.release();
 
           // Handle error after the release.
           if (error) {
@@ -54,10 +55,10 @@ let controller = {
 
                 id = results[0].id;
                 const returnValue = { id, ...user };
-                // res.status(201).json({
-                //   status: 201,
-                //   result: returnValue,
-                // });
+                res.status(201).json({
+                  status: 201,
+                  result: returnValue,
+                });
               }
             );
 
