@@ -74,10 +74,26 @@ let controller = {
 
   getAllUsers: (req, res) => {
     dbconnection.getConnection(function (err, connection) {
+      const queryParams = req.query;
+      const { firstName, lastName } = queryParams;
+      console.log(queryParams);
+      console.log(`firstName: ${firstName} lastName: ${lastName} `);
+
+      let queryString = "SELECT * FROM user";
+
+      if (firstName || lastName) {
+        queryString += " WHERE ";
+        if (firstName) {
+          queryString += `firstName = '${firstName}' `;
+        }
+      }
+
+      console.log(queryString);
+
       if (err) throw err; // not connected!
 
       // Use the connection
-      connection.query("SELECT * FROM user", function (error, results, fields) {
+      connection.query(queryString, function (error, results, fields) {
         // When done with the connection, release it.
         connection.release();
 
