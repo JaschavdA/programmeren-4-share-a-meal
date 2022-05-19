@@ -1,22 +1,21 @@
-// process.env.DB_DATABASE = process.env.DB_DATABASE || "share-a-meal-testdb";
+const chai = require("chai");
+const chaiHttp = require("chai-http");
+const server = require("../../index");
+const assert = require("assert");
+require("dotenv").config();
+const dbconnection = require("../../database/dbconnection");
+const res = require("express/lib/response");
+const { Assertion } = require("chai");
 
-// const chai = require("chai");
-// const chaiHttp = require("chai-http");
-// const server = require("../../index");
-// const assert = require("assert");
-// require("dotenv").config();
-// const dbconnection = require("../../database/dbconnection");
-// const res = require("express/lib/response");
-
-// chai.should();
-// chai.use(chaiHttp);
+chai.should();
+chai.use(chaiHttp);
+it("this is a test", (done) => {
+    assert.equal(true, true);
+    done();
+});
 
 // describe("share-a-meal API", () => {
 //   before((done) => {
-//     console.log(
-//       "before: hier zorg je eventueel dat de precondities correct zijn"
-//     );
-//     console.log("before done");
 //     done();
 //     //INSERT INTO user (firstName, lastName, street, city, password, emailAdress) VALUES ('first', 'last', 'street', 'city', 'password', 'email@test.com');
 //   });
@@ -30,6 +29,9 @@
 //           "DELETE IGNORE FROM user; ",
 //           function (error, results, fields) {
 //             if (error) throw error;
+//             if (error) {
+//               console.log(error);
+//             }
 //           }
 //         );
 
@@ -39,6 +41,10 @@
 //             connection.release;
 //             if (error) throw error;
 //             console.log("beforeEach done");
+//             if (error) {
+//               console.log(error);
+//             }
+
 //             done();
 //           }
 //         );
@@ -154,6 +160,10 @@
 //             connection.release;
 //             if (error) throw error;
 //             console.log("beforeEach done");
+//             if (error) {
+//               console.log(error);
+//             }
+
 //             done();
 //           }
 //         );
@@ -231,6 +241,61 @@
 //             done();
 //           });
 //       });
+//   });
+
+//   describe("UC 202 get user", () => {
+//     beforeEach((done) => {
+//       dbconnection.getConnection(function (err, connection) {
+//         connection.query(
+//           "DELETE IGNORE FROM user; ",
+//           function (error, results, fields) {
+//             if (error) {
+//               console.log(error);
+//             }
+//           }
+//         );
+
+//         if (err) throw err;
+//         connection.query(
+//           "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (1,'first', 'last', 'street', 'city', 'password', 'email@test.com');",
+//           function (error, results, fields) {
+//             if (error) {
+//               console.log(error);
+//             }
+//           }
+//         );
+
+//         connection.query(
+//           "INSERT INTO user (id, firstName, lastName, street, city, password, emailAdress) VALUES (2, 'first2', 'last2', 'street2', 'city2', 'password2', 'email@test2.com');",
+//           function (error, results, fields) {
+//             connection.release;
+//             if (error) {
+//               console.log(error);
+//             }
+//           }
+//         );
+//         done();
+//       });
+//     });
+
+//     it("TC-202-2 should 2 correct items if DB has 2 items", (done) => {
+//       chai
+//         .request(server)
+//         .get("/api/user")
+//         .end((err, res) => {
+//           assert.ifError(err);
+//           res.should.have.status(200);
+//           res.should.be.an("object");
+//           res.body.should.be.an("object");
+//           res.body.should.be.an("object").that.has.all.keys("status", "result");
+//           let { status, result } = res.body;
+//           status.should.be.a("number");
+//           result.should.be.an("array").that.has.length(2);
+//           result[0].emailAdress.should.equal("email@test.com");
+//           result[1].emailAdress.should.equal("email@test2.com");
+
+//           done();
+//         });
 //     });
 //   });
 
@@ -245,6 +310,10 @@
 //             connection.release;
 //             if (error) throw error;
 //             console.log("beforeEach done");
+//             if (error) {
+//               console.log(error);
+//             }
+
 //             done();
 //           }
 //         );
@@ -280,6 +349,9 @@
 //           "DELETE IGNORE FROM user; ",
 //           function (error, results, fields) {
 //             if (error) throw error;
+//             if (error) {
+//               console.log(error);
+//             }
 //           }
 //         );
 //         if (err) throw err;
@@ -289,6 +361,10 @@
 //             console.log(results);
 //             connection.release;
 //             if (error) throw error;
+//             connection.release;
+//             if (error) {
+//               console.log(error);
+//             }
 //             console.log("beforeEach done");
 //             done();
 //           }
@@ -347,6 +423,31 @@
 //   });
 
 //   it("TC-206-2 should give correct user if ID is found", (done) => {
+//   it("TC-204-3 should give correct user if ID is found", (done) => {
+//     chai
+//       .request(server)
+//       .get("/api/user/1")
+//       .end((err, res) => {
+//         assert.ifError(err);
+//         res.should.have.status(200);
+//         res.should.be.an("object");
+//         res.body.should.be.an("object");
+//         res.body.should.be.an("object").that.has.all.keys("status", "result");
+//         let { status, result } = res.body;
+//         status.should.be.a("number");
+//         result.should.be.an("array").that.has.length(1);
+//         result[0].id.should.equal(1);
+//         result[0].firstName.should.equal("first");
+//         result[0].lastName.should.equal("last");
+//         result[0].street.should.equal("street");
+//         result[0].city.should.equal("city");
+//         result[0].password.should.equal("password");
+//         result[0].emailAdress.should.equal("email@test.com");
+//         done();
+//       });
+//   });
+
+//   it("TC-206-1 should give correct user if ID is found", (done) => {
 //     chai
 //       .request(server)
 //       .delete("/api/user/1")

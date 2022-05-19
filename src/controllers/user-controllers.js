@@ -35,7 +35,6 @@ let controller = {
         `INSERT INTO user (firstName, lastName, street, city, password, emailAdress) VALUES ('${user.firstName}', '${user.lastName}', '${user.street}', '${user.city}', '${user.password}', '${user.emailAdress}')`,
         function (error, results, fields) {
           // When done with the connection, release it.
-          connection.release();
 
           // Handle error after the release.
           if (error) {
@@ -46,6 +45,23 @@ let controller = {
             });
             //if there is no error, give response showing succes
           } else {
+            // connection.query(
+            //   `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
+            //   function (error, results, fields) {
+            //     connection.release();
+            //     if (error) {
+            //       console.log(error);
+            //     }
+
+            //     id = results[0].id;
+            //     const returnValue = { id, ...user };
+            //     res.status(201).json({
+            //       status: 201,
+            //       result: returnValue,
+            //     });
+            //   }
+            // );
+
             res.status(201).json({
               status: 201,
               result: user,
@@ -58,24 +74,38 @@ let controller = {
 
   getAllUsers: (req, res) => {
     dbconnection.getConnection(function (err, connection) {
+      const queryParams = req.query;
+      const { firstName, lastName } = queryParams;
+      console.log(queryParams);
+      console.log(`firstName: ${firstName} lastName: ${lastName} `);
+
+      let queryString = "SELECT * FROM user";
+
+      if (firstName || lastName) {
+        queryString += " WHERE ";
+        if (firstName) {
+          queryString += `firstName = '${firstName}' `;
+        }
+      }
+
+      console.log(queryString);
+
       if (err) throw err; // not connected!
 
       // Use the connection
-      connection.query("SELECT * FROM user", function (error, results, fields) {
+      connection.query(queryString, function (error, results, fields) {
         // When done with the connection, release it.
         connection.release();
 
         // Handle error after the release.
-        if (error) throw error;
+        if (error) {
+          console.log(error);
+        }
 
         res.status(200).json({
           status: 200,
           result: results,
         });
-
-        // pool.end((err) => {
-        //   console.log("pool was closed");
-        // });
       });
     });
   },
@@ -101,7 +131,9 @@ let controller = {
           connection.release();
 
           // Handle error after the release.
-          if (error) throw error;
+          if (error) {
+            console.log(error);
+          }
 
           if (results.length > 0) {
             res.status(200).json({
@@ -126,8 +158,6 @@ let controller = {
     dbconnection.getConnection(function (err, connection) {
       if (err) throw err; // not connected!
       // Use the connection
-
-      //`INSERT INTO user (firstName, lastName, street, city, password, emailAdress)
 
       connection.query(
         `UPDATE user SET firstName = '${user.firstName}', lastName = '${user.lastName}', street = '${user.street}', city = '${user.city}', password = '${user.password}', emailAdress = '${user.emailAdress}' WHERE id = ${id}`,
