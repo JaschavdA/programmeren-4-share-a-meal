@@ -71,6 +71,7 @@ let authController = {
     },
 
     validateToken: (req, res, next) => {
+        console.log("makes it to here");
         const authHeader = req.headers.authorization;
         if (!authHeader) {
             res.status(401).json({
@@ -89,9 +90,7 @@ let authController = {
                     });
                 }
                 if (payload) {
-                    console.log(payload);
-                    console.log("valid token");
-                    req.userID = payload.userID;
+                    req.userID = payload.id;
                     next();
                 }
             });

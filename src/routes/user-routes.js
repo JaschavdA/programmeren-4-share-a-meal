@@ -11,15 +11,28 @@ router.get(
     userController.getAllUsers
 );
 
-router.get("/api/user/profile", userController.getUserProfile);
+router.get(
+    "/api/user/profile",
+    authController.validateToken,
+    userController.getUserProfile
+);
 
-router.get("/api/user/:userID", userController.getUserById);
+router.get(
+    "/api/user/:userID",
+    authController.validateToken,
+    userController.getUserById
+);
 
 router.put(
     "/api/user/:userID",
+    authController.validateToken,
     userController.validateUser,
     userController.updateUser
 );
 
-router.delete("/api/user/:userID", userController.deleteUserById);
+router.delete(
+    "/api/user/:userID",
+    authController.validateToken,
+    userController.deleteUserById
+);
 module.exports = router;

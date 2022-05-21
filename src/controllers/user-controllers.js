@@ -5,6 +5,7 @@ const assert = require("assert");
 
 let controller = {
     validateUser: (req, res, next) => {
+        console.log("makes it to validateUSer");
         let user = req.body;
 
         let { emailAdress, firstName, lastName, street, city, password } = user;
@@ -123,9 +124,37 @@ let controller = {
     },
 
     getUserProfile: (req, res) => {
-        res.status(501).json({
-            status: 501,
-            message: "not yet implemented",
+        const id = req.userID;
+        dbconnection.getConnection(function (err, connection) {
+            if (err) {
+                console.log(err);
+                res.status(500).json({
+                    statusCode: 500,
+                    message: "Unable to connect to server",
+                });
+            }
+
+            connection.query(
+                "SELECT * FROM user WHERE id = ?",
+                [id],
+                function (error, results, fields) {
+                    if (error) {
+                        console.log(error);
+                    }
+
+                    if (results.length < 1) {
+                        res.status(404).json({
+                            statusCode: 404,
+                            message: `User with ID ${id} was not found`,
+                        });
+                    } else {
+                        res.status(200).json({
+                            statusCode: 200,
+                            result: results[0],
+                        });
+                    }
+                }
+            );
         });
     },
 
@@ -171,31 +200,55 @@ let controller = {
             if (err) throw err; // not connected!
             // Use the connection
 
-            connection.query(
-                `UPDATE user SET firstName = '${user.firstName}', lastName = '${user.lastName}', street = '${user.street}', city = '${user.city}', password = '${user.password}', emailAdress = '${user.emailAdress}' WHERE id = ${id}`,
-                function (error, results, fields) {
-                    // When done with the connection, release it.
-                    connection.release();
-                    // Handle error after the release.
-                    if (error) {
-                        res.status(409).json({
-                            status: 409,
-                            message:
-                                "There's already a user registered with this email address",
-                        });
-                    } else if (results.affectedRows > 0) {
-                        res.status(200).json({
-                            status: 200,
-                            result: "User Successfully updated",
-                        });
-                    } else {
-                        res.status(400).json({
-                            status: 400,
-                            message: `user with id: ${id} could not be found`,
-                        });
+            //checks if the ID from the token matches the given ID
+            if (req.userID == id) {
+                const firstName = user.firstName;
+                const lastName = user.lastName;
+                const street = user.street;
+                const city = user.city;
+                const password = user.password;
+                const emailAdress = user.emailAdress;
+
+                connection.query(
+                    `UPDATE user SET firstName = ?, lastName = ?, street = ?, city = ?, password = ?, emailAdress = ? WHERE id = ?`,
+                    [
+                        firstName,
+                        lastName,
+                        street,
+                        city,
+                        password,
+                        emailAdress,
+                        id,
+                    ],
+                    function (error, results, fields) {
+                        // When done with the connection, release it.
+                        connection.release();
+                        // Handle error after the release.
+                        if (error) {
+                            res.status(409).json({
+                                status: 409,
+                                message:
+                                    "There's already a user registered with this email address",
+                            });
+                        } else if (results.affectedRows > 0) {
+                            res.status(200).json({
+                                status: 200,
+                                result: "User Successfully updated",
+                            });
+                        } else {
+                            res.status(400).json({
+                                status: 400,
+                                message: `user with id: ${id} could not be found`,
+                            });
+                        }
                     }
-                }
-            );
+                );
+            } else {
+                res.status(403).json({
+                    statusCode: 403,
+                    message: "You may only edit your own account info",
+                });
+            }
         });
     },
 
@@ -203,30 +256,39 @@ let controller = {
         dbconnection.getConnection(function (err, connection) {
             if (err) throw err; // not connected!
 
-            // Use the connection
             const id = req.params.userID;
-            connection.query(
-                `DELETE FROM user WHERE id = ${id}`,
-                function (error, results, fields) {
-                    // When done with the connection, release it.
-                    connection.release();
+            //check if param ID matches token ID
+            if (id == req.userID) {
+                // Use the connection
+                connection.query(
+                    `DELETE FROM user WHERE id = ?`,
+                    [id],
+                    function (error, results, fields) {
+                        // When done with the connection, release it.
+                        connection.release();
 
-                    // Handle error after the release.
-                    // if (error) console.log(error);
+                        // Handle error after the release.
+                        if (error) console.log(error);
 
-                    if (results.affectedRows > 0) {
-                        res.status(200).json({
-                            status: 200,
-                            message: `user with id: ${id} has been deleted`,
-                        });
-                    } else {
-                        res.status(400).json({
-                            status: 400,
-                            message: `user with id: ${id} could not be found`,
-                        });
+                        if (results.affectedRows > 0) {
+                            res.status(200).json({
+                                status: 200,
+                                message: `user with id: ${id} has been deleted`,
+                            });
+                        } else {
+                            res.status(400).json({
+                                status: 400,
+                                message: `user with id: ${id} could not be found`,
+                            });
+                        }
                     }
-                }
-            );
+                );
+            } else {
+                res.status(403).json({
+                    statusCode: 403,
+                    message: "You may only delete your own account",
+                });
+            }
         });
     },
 };
