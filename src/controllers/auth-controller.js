@@ -1,14 +1,14 @@
 const req = require("express/lib/request");
+const jwtSecretKey = process.env.JWT_Key;
+const jwt = require("jsonwebtoken");
 const dbconnection = require("../../database/dbconnection");
 //TODO: add all inputs
 const assert = require("assert");
-const { use } = require("chai");
-const jwtSecretKey = process.env.JWT_Key;
 
-let controller = {
-    login: (req, res, next) => {
+let authController = {
+    login: (req, res) => {
         const loginInfo = req.body;
-        const emailAdres = loginInfo.emailAdress;
+        const emailAdress = loginInfo.emailAdress;
         const password = loginInfo.password;
 
         dbconnection.getConnection(function (err, connection) {
@@ -21,14 +21,15 @@ let controller = {
 
             connection.query(
                 "SELECT id, emailAdress, password, firstName, lastName FROM user WHERE emailAdress = ?",
-                [emailAdres],
+                [emailAdress],
                 function (error, results, fields) {
                     if (error) {
+                        console.log("here");
                         console.log(error);
                     }
-                    const returnedEmail = results.emailAdres;
-                    const returnedPassword = results.password;
-                    const userID = results.id;
+                    const returnedEmail = results[0].emailAdress;
+                    const returnedPassword = results[0].password;
+                    const userID = results[0].id;
                     console.log(returnedEmail);
                     console.log(returnedPassword);
                     console.log(userID);
@@ -36,7 +37,7 @@ let controller = {
                     if (!returnedEmail) {
                         res.status(404).json({
                             statusCode: 404,
-                            message: `User with emailAdres ${emailAdres} has not been found`,
+                            message: `User with emailAdres ${emailAdress} has not been found`,
                         });
                     }
                     //Since we search for the user by their email it is not needed to test if the email is the same during the password validation because it will always be the same
@@ -51,31 +52,70 @@ let controller = {
                                 if (err) {
                                     console.log(error);
                                 }
+                                console.log(jwtSecretKey);
                                 res.status(200).json({
                                     statusCode: 200,
                                     results: { ...userinfo, token },
                                 });
                             }
                         );
+                    } else {
+                        res.status(400).json({
+                            statusCode: 400,
+                            message: "email or password is not correct",
+                        });
                     }
                 }
             );
         });
     },
 
+    validateToken: (req, res, next) => {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            res.status(401).json({
+                statusCode: 401,
+                message: "Authorization header missing!",
+            });
+        } else {
+            const token = authHeader.substring(7, authHeader.length);
+            jwt.verify(token, jwtSecretKey, (err, payload) => {
+                if (err) {
+                    console.log(err);
+                    res.status(401).json({
+                        statusCode: 401,
+                        message: "Invalid token",
+                        datetime: new Date().toISOString(),
+                    });
+                }
+                if (payload) {
+                    console.log(payload);
+                    console.log("valid token");
+                    req.userID = payload.userID;
+                    next();
+                }
+            });
+        }
+    },
+
     validateLoginInfo: (req, res, next) => {
+        user = req.body;
+        console.log(user);
+        console.log(typeof user.emailAdress);
+        console.log(typeof user.password);
         try {
             assert(
-                typeof req.emailAdress === "string",
+                typeof user.emailAdress === "string",
                 "Email must be a string"
             );
             assert(
                 /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
-                    req.emailAdress
+                    user.emailAdress
                 ),
                 "please enter a valid emailAdress"
             );
-            assert(req.password.length > 0, "password may not be empty");
+            assert(user.password.length > 0, "password may not be empty");
+            next();
         } catch (err) {
             res.status(400).json({
                 status: 400,
@@ -85,4 +125,4 @@ let controller = {
     },
 };
 
-module.exports = controller;
+module.exports = authController;

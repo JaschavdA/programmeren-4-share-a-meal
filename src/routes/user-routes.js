@@ -1,10 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/user-controllers");
+const authController = require("../controllers/auth-controller");
 
 router.post("/api/user", userController.validateUser, userController.addUser);
 
-router.get("/api/user", userController.getAllUsers);
+router.get(
+    "/api/user",
+    authController.validateToken,
+    userController.getAllUsers
+);
 
 router.get("/api/user/profile", userController.getUserProfile);
 
