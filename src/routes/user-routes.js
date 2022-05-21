@@ -1,17 +1,20 @@
 const express = require("express");
-const { validateEmailUpdateUser } = require("../controllers/user-controllers");
 const router = express.Router();
-const controller = require("../controllers/user-controllers");
+const userController = require("../controllers/user-controllers");
 
-router.post("/api/user", controller.validateUser, controller.addUser);
+router.post("/api/user", userController.validateUser, userController.addUser);
 
-router.get("/api/user", controller.getAllUsers);
+router.get("/api/user", userController.getAllUsers);
 
-router.get("/api/user/profile", controller.getUserProfile);
+router.get("/api/user/profile", userController.getUserProfile);
 
-router.get("/api/user/:userID", controller.getUserById);
+router.get("/api/user/:userID", userController.getUserById);
 
-router.put("/api/user/:userID", controller.validateUser, controller.updateUser);
+router.put(
+    "/api/user/:userID",
+    userController.validateUser,
+    userController.updateUser
+);
 
-router.delete("/api/user/:userID", controller.deleteUserById);
+router.delete("/api/user/:userID", userController.deleteUserById);
 module.exports = router;

@@ -1,0 +1,88 @@
+const req = require("express/lib/request");
+const dbconnection = require("../../database/dbconnection");
+//TODO: add all inputs
+const assert = require("assert");
+const { use } = require("chai");
+const jwtSecretKey = process.env.JWT_Key;
+
+let controller = {
+    login: (req, res, next) => {
+        const loginInfo = req.body;
+        const emailAdres = loginInfo.emailAdress;
+        const password = loginInfo.password;
+
+        dbconnection.getConnection(function (err, connection) {
+            if (err) {
+                res.status(500).json({
+                    statusCode: 500,
+                    message: "Connection with server failed",
+                });
+            }
+
+            connection.query(
+                "SELECT id, emailAdress, password, firstName, lastName FROM user WHERE emailAdress = ?",
+                [emailAdres],
+                function (error, results, fields) {
+                    if (error) {
+                        console.log(error);
+                    }
+                    const returnedEmail = results.emailAdres;
+                    const returnedPassword = results.password;
+                    const userID = results.id;
+                    console.log(returnedEmail);
+                    console.log(returnedPassword);
+                    console.log(userID);
+                    //Since we search for the user by their email it is not needed to test if the email is the same during the password validation
+                    if (!returnedEmail) {
+                        res.status(404).json({
+                            statusCode: 404,
+                            message: `User with emailAdres ${emailAdres} has not been found`,
+                        });
+                    }
+                    //Since we search for the user by their email it is not needed to test if the email is the same during the password validation because it will always be the same
+                    if (password === returnedPassword) {
+                        const payload = { id: userID };
+                        const userinfo = results[0];
+                        jwt.sign(
+                            payload,
+                            jwtSecretKey,
+                            { expiresIn: "12d" },
+                            function (err, token) {
+                                if (err) {
+                                    console.log(error);
+                                }
+                                res.status(200).json({
+                                    statusCode: 200,
+                                    results: { ...userinfo, token },
+                                });
+                            }
+                        );
+                    }
+                }
+            );
+        });
+    },
+
+    validateLoginInfo: (req, res, next) => {
+        try {
+            assert(
+                typeof req.emailAdress === "string",
+                "Email must be a string"
+            );
+            assert(
+                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(
+                    req.emailAdress
+                ),
+                "please enter a valid emailAdress"
+            );
+            assert(req.password.length > 0, "password may not be empty");
+        } catch (err) {
+            res.status(400).json({
+                status: 400,
+                message: err.message,
+            });
+        }
+    },
+};
+
+module.exports = controller;

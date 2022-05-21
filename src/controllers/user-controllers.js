@@ -31,52 +31,6 @@ let controller = {
     },
 
     addUser: (req, res) => {
-        // dbconnection.getConnection(function (err, connection) {
-        //   if (err) throw err; // not connected!
-
-        //   // Use the connection
-        //   const user = req.body;
-
-        //   connection.query(
-        //     `INSERT INTO user (firstName, lastName, street, city, password, emailAdress) VALUES ('${user.firstName}', '${user.lastName}', '${user.street}', '${user.city}', '${user.password}', '${user.emailAdress}')`,
-        //     function (error, results, fields) {
-        //       // When done with the connection, release it.
-
-        //       // Handle error after the release.
-        //       if (error) {
-        //         res.status(409).json({
-        //           status: 409,
-        //           message:
-        //             "There's already a user registered with this email address",
-        //         });
-        //         //if there is no error, give response showing succes
-        //       } else {
-        //         // connection.query(
-        //         //   `SELECT id FROM user WHERE emailAdress = '${user.emailAdress}'`,
-        //         //   function (error, results, fields) {
-        //         //     connection.release();
-        //         //     if (error) {
-        //         //       console.log(error);
-        //         //     }
-
-        //         //     id = results[0].id;
-        //         //     const returnValue = { id, ...user };
-        //         //     res.status(201).json({
-        //         //       status: 201,
-        //         //       result: returnValue,
-        //         //     });
-        //         //   }
-        //         // );
-
-        //         res.status(201).json({
-        //           status: 201,
-        //           result: user,
-        //         });
-        //       }
-        //     }
-        //   );
-        // });
-
         dbconnection.getConnection(function (err, connection) {
             if (err) {
                 res.status(500).json({
@@ -131,9 +85,6 @@ let controller = {
         dbconnection.getConnection(function (err, connection) {
             const queryParams = req.query;
             const { firstName, isActive } = queryParams;
-            console.log(queryParams);
-            console.log(`firstName: ${firstName} isActive: ${isActive} `);
-
             let queryString = "SELECT * FROM user";
 
             if (firstName || isActive) {
@@ -150,8 +101,6 @@ let controller = {
                     queryString += `isActive = '${isActive}'`;
                 }
             }
-
-            console.log(queryString);
 
             if (err) throw err; // not connected!
 
