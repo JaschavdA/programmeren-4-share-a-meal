@@ -117,8 +117,8 @@ let controller = {
                     } else {
                         console.log("result:");
                         console.log(results[1]);
-                        res.status(200).json({
-                            statusCode: 200,
+                        res.status(201).json({
+                            statusCode: 201,
                             result: results[1],
                         });
                     }
@@ -130,16 +130,24 @@ let controller = {
     getAllUsers: (req, res) => {
         dbconnection.getConnection(function (err, connection) {
             const queryParams = req.query;
-            const { firstName, lastName } = queryParams;
+            const { firstName, isActive } = queryParams;
             console.log(queryParams);
-            console.log(`firstName: ${firstName} lastName: ${lastName} `);
+            console.log(`firstName: ${firstName} isActive: ${isActive} `);
 
             let queryString = "SELECT * FROM user";
 
-            if (firstName || lastName) {
+            if (firstName || isActive) {
                 queryString += " WHERE ";
+
                 if (firstName) {
                     queryString += `firstName = '${firstName}' `;
+                }
+                if (firstName && isActive) {
+                    queryString += " AND ";
+                }
+
+                if (isActive) {
+                    queryString += `isActive = '${isActive}'`;
                 }
             }
 
