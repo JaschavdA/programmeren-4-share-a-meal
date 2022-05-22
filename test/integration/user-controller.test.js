@@ -77,110 +77,110 @@ describe("share-a-meal API", () => {
                 });
         });
 
-        // it("TC-201-1-2 Verplicht veld ontbreekt", function (done) {
-        //     chai.request(server)
-        //         .post("/api/user/")
-        //         .send({
-        //             firstName: "Jan",
-        //             // lastName: "Modaal",
-        //             street: "Lovensdijkstraat 61",
-        //             city: "Breda",
-        //             password: "secret",
-        //             emailAdress: "j.modaal@server.com",
-        //         })
-        //         .end((err, res) => {
-        //             res.should.have.status(400);
-        //             res.body.should.be
-        //                 .an("object")
-        //                 .that.has.all.keys("statusCode", "message");
-        //             const { statusCode, message } = res.body;
-        //             statusCode.should.be.a("number");
-        //             statusCode.should.equal(400);
-        //             message.should.be.a("string");
-        //             message.should.equal("lastName must be a string");
+        it("TC-201-1-2 Verplicht veld ontbreekt", function (done) {
+            chai.request(server)
+                .post("/api/user/")
+                .send({
+                    firstName: "Jan",
+                    // lastName: "Modaal",
+                    street: "Lovensdijkstraat 61",
+                    city: "Breda",
+                    password: "secret",
+                    emailAdress: "j.modaal@server.com",
+                })
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.be
+                        .an("object")
+                        .that.has.all.keys("statusCode", "message");
+                    const { statusCode, message } = res.body;
+                    statusCode.should.be.a("number");
+                    statusCode.should.equal(400);
+                    message.should.be.a("string");
+                    message.should.equal("lastName must be a string");
 
-        //             done();
-        //         });
-        // });
+                    done();
+                });
+        });
 
-        // it("TC-201-1-3 Verplicht veld ontbreekt", function (done) {
-        //     chai.request(server)
-        //         .post("/api/user/")
-        //         .send({
-        //             firstName: "Jan",
-        //             lastName: "Modaal",
-        //             // street: "Lovensdijkstraat 61",
-        //             city: "Breda",
-        //             password: "secret",
-        //             emailAdress: "j.modaal@server.com",
-        //         })
-        //         .end((err, res) => {
-        //             res.should.have.status(400);
-        //             res.body.should.be
-        //                 .an("object")
-        //                 .that.has.all.keys("statusCode", "message");
-        //             const { statusCode, message } = res.body;
-        //             statusCode.should.be.a("number");
-        //             statusCode.should.equal(400);
-        //             message.should.be.a("string");
-        //             message.should.equal("street must be a string");
+        it("TC-201-1-3 Verplicht veld ontbreekt", function (done) {
+            chai.request(server)
+                .post("/api/user/")
+                .send({
+                    firstName: "Jan",
+                    lastName: "Modaal",
+                    // street: "Lovensdijkstraat 61",
+                    city: "Breda",
+                    password: "secret",
+                    emailAdress: "j.modaal@server.com",
+                })
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.be
+                        .an("object")
+                        .that.has.all.keys("statusCode", "message");
+                    const { statusCode, message } = res.body;
+                    statusCode.should.be.a("number");
+                    statusCode.should.equal(400);
+                    message.should.be.a("string");
+                    message.should.equal("street must be a string");
 
-        //             done();
-        //         });
-        // });
+                    done();
+                });
+        });
 
-        // it("TC-201-1-4 Verplicht veld ontbreekt", function (done) {
-        //     chai.request(server)
-        //         .post("/api/user/")
-        //         .send({
-        //             firstName: "Jan",
-        //             lastName: "Modaal",
-        //             street: "Lovensdijkstraat 61",
-        //             city: "Breda",
-        //             password: "secret",
-        //             // emailAdress: "j.modaal@server.com",
-        //         })
-        //         .end((err, res) => {
-        //             res.should.have.status(400);
-        //             res.body.should.be
-        //                 .an("object")
-        //                 .that.has.all.keys("statusCode", "message");
-        //             const { statusCode, message } = res.body;
-        //             statusCode.should.be.a("number");
-        //             statusCode.should.equal(400);
-        //             message.should.be.a("string");
-        //             message.should.equal("Email must be a string");
+        it("TC-201-1-4 Verplicht veld ontbreekt", function (done) {
+            chai.request(server)
+                .post("/api/user/")
+                .send({
+                    firstName: "Jan",
+                    lastName: "Modaal",
+                    street: "Lovensdijkstraat 61",
+                    city: "Breda",
+                    password: "secret",
+                    // emailAdress: "j.modaal@server.com",
+                })
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.be
+                        .an("object")
+                        .that.has.all.keys("statusCode", "message");
+                    const { statusCode, message } = res.body;
+                    statusCode.should.be.a("number");
+                    statusCode.should.equal(400);
+                    message.should.be.a("string");
+                    message.should.equal("Email must be a string");
 
-        //             done();
-        //         });
-        // });
+                    done();
+                });
+        });
 
-        // it("TC-201-1-5 Verplicht veld ontbreekt", function (done) {
-        //     chai.request(server)
-        //         .post("/api/user/")
-        //         .send({
-        //             firstName: "Jan",
-        //             lastName: "Modaal",
-        //             street: "Lovensdijkstraat 61",
-        //             city: "Breda",
-        //             //not sending password
-        //             // password: "secret",
-        //             emailAdress: "j.modaal@server.com",
-        //         })
-        //         .end((err, res) => {
-        //             res.should.have.status(400);
-        //             res.body.should.be
-        //                 .an("object")
-        //                 .that.has.all.keys("statusCode", "message");
-        //             const { statusCode, message } = res.body;
-        //             statusCode.should.be.a("number");
-        //             statusCode.should.equal(400);
-        //             message.should.be.a("string");
-        //             message.should.equal("password may not be empty");
+        it("TC-201-1-5 Verplicht veld ontbreekt", function (done) {
+            chai.request(server)
+                .post("/api/user/")
+                .send({
+                    firstName: "Jan",
+                    lastName: "Modaal",
+                    street: "Lovensdijkstraat 61",
+                    city: "Breda",
+                    //not sending password
+                    // password: "secret",
+                    emailAdress: "j.modaal@server.com",
+                })
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.be
+                        .an("object")
+                        .that.has.all.keys("statusCode", "message");
+                    const { statusCode, message } = res.body;
+                    statusCode.should.be.a("number");
+                    statusCode.should.equal(400);
+                    message.should.be.a("string");
+                    message.should.equal("password may not be empty");
 
-        //             done();
-        //         });
-        // });
+                    done();
+                });
+        });
     });
 
     // it("TC-201-1 Verplicht veld ontbreekt", function (done) {
