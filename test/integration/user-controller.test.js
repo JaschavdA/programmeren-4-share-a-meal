@@ -626,28 +626,28 @@ describe("UC 202 deel 4", () => {
                         "city"
                     );
 
-                // const {
-                //     id,
-                //     firstName,
-                //     lastName,
-                //     isActive,
-                //     emailAdress,
-                //     password,
-                //     phoneNumber,
-                //     roles,
-                //     street,
-                //     city,
-                // } = result[0];
-                // id.should.be.a("number").that.equals(1);
-                // firstName.should.be.a("string").that.equals("first");
-                // lastName.should.be.a("string").that.equals("last");
-                // isActive.should.equal(1);
-                // emailAdress.should.be.a("string").that.equals("name@server.nl");
-                // password.should.be.a("string").that.equals("secret");
-                // phoneNumber.should.be.a("string").that.equals("-");
-                // roles.should.be.a("string").that.equals("editor,guest");
-                // street.should.be.a("string").that.equals("street");
-                // city.should.be.a("string").that.equals("city");
+                const {
+                    id,
+                    firstName,
+                    lastName,
+                    isActive,
+                    emailAdress,
+                    password,
+                    phoneNumber,
+                    roles,
+                    street,
+                    city,
+                } = result[0];
+                id.should.be.a("number").that.equals(1);
+                firstName.should.be.a("string").that.equals("first");
+                lastName.should.be.a("string").that.equals("last");
+                isActive.should.equal(1);
+                emailAdress.should.be.a("string").that.equals("name@server.nl");
+                password.should.be.a("string").that.equals("secret");
+                phoneNumber.should.be.a("string").that.equals("-");
+                roles.should.be.a("string").that.equals("editor,guest");
+                street.should.be.a("string").that.equals("street");
+                city.should.be.a("string").that.equals("city");
 
                 done();
             })
