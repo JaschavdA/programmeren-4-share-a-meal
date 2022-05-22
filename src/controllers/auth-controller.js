@@ -24,9 +24,9 @@ let authController = {
                 [emailAdress],
                 function (error, results, fields) {
                     if (error) {
-                        console.log("here");
                         console.log(error);
                     }
+                    connection.release;
                     const returnedEmail = results[0].emailAdress;
                     const returnedPassword = results[0].password;
                     const userID = results[0].id;
@@ -71,7 +71,6 @@ let authController = {
     },
 
     validateToken: (req, res, next) => {
-        console.log("makes it to here");
         const authHeader = req.headers.authorization;
         if (!authHeader) {
             res.status(401).json({

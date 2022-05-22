@@ -2,10 +2,10 @@ const req = require("express/lib/request");
 const dbconnection = require("../../database/dbconnection");
 //TODO: add all inputs
 const assert = require("assert");
+const { type } = require("express/lib/response");
 
 let controller = {
     validateUser: (req, res, next) => {
-        console.log("makes it to validateUSer");
         let user = req.body;
 
         let { emailAdress, firstName, lastName, street, city, password } = user;
@@ -21,11 +21,11 @@ let controller = {
             assert(typeof lastName === "string", "lastName must be a string");
             assert(typeof street === "string", "street must be a string");
             assert(typeof city === "string", "city must be a string");
-            assert(password.length > 0, "password may not be empty");
+            assert(typeof password === "string", "password may not be empty");
             next();
         } catch (err) {
             res.status(400).json({
-                status: 400,
+                statusCode: 400,
                 message: err.message,
             });
         }
