@@ -433,6 +433,7 @@ describe("UC 202", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB);
+            connection.release();
             done();
         });
     });
@@ -454,6 +455,7 @@ describe("UC 202 deel 2", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
             done();
         });
     });
@@ -546,6 +548,7 @@ describe("UC 202 deel 3", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
             done();
         });
     });
@@ -568,6 +571,7 @@ describe("UC 202 deel 4", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
             done();
         });
     });
@@ -591,6 +595,7 @@ describe("UC 202 deel 4", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
             done();
         });
     });
@@ -654,13 +659,15 @@ describe("UC 202 deel 5", () => {
     beforeEach((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
+
             done();
         });
     });
 
     it("TC-202-6 Toon gebruikers met zoekterm op bestaande naam (max op 2 velden filteren)", function (done) {
         chai.request(server)
-            .get("/api/user?firstName=Marieke&isActive=1")
+            .get("/api/user?firstName=first&isActive=1")
             .set({ Authorization: `Bearer ${token}` })
             .then((res) => {
                 //There are no users with isActive equals false
@@ -668,7 +675,7 @@ describe("UC 202 deel 5", () => {
                 res.body.should.be
                     .an("object")
                     .that.has.all.keys("statusCode", "result");
-                console.log(res.body.result);
+                console.log(res.body);
                 res.body.result[0].should.be
                     .a("object")
                     .that.has.all.keys(
@@ -694,6 +701,7 @@ describe("UC 203 deel 1", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
             done();
         });
     });
