@@ -210,9 +210,16 @@ let controller = {
                 const city = user.city;
                 const password = user.password;
                 const emailAdress = user.emailAdress;
+                const phoneNumber = user.phoneNumber;
+                if (!phoneNumber || phoneNumber.length < 1) {
+                    res.status(400).json({
+                        statusCode: 400,
+                        message: "please enter a valid phone number",
+                    });
+                }
 
                 connection.query(
-                    `UPDATE user SET firstName = ?, lastName = ?, street = ?, city = ?, password = ?, emailAdress = ? WHERE id = ?`,
+                    `UPDATE user SET firstName = ?, lastName = ?, street = ?, city = ?, password = ?, emailAdress = ?, phoneNumber = ? WHERE id = ?`,
                     [
                         firstName,
                         lastName,
@@ -220,6 +227,7 @@ let controller = {
                         city,
                         password,
                         emailAdress,
+                        phoneNumber,
                         id,
                     ],
                     function (error, results, fields) {

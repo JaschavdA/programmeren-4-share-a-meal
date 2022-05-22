@@ -81,6 +81,7 @@ let authController = {
             const token = authHeader.substring(7, authHeader.length);
             jwt.verify(token, jwtSecretKey, (err, payload) => {
                 if (err) {
+                    console.log(err);
                     res.status(401).json({
                         statusCode: 401,
                         message: "Invalid token",
@@ -97,9 +98,9 @@ let authController = {
 
     validateLoginInfo: (req, res, next) => {
         user = req.body;
-        console.log(user);
-        console.log(typeof user.emailAdress);
-        console.log(typeof user.password);
+        // console.log(user);
+        // console.log(typeof user.emailAdress);
+        // console.log(typeof user.password);
         try {
             assert(
                 typeof user.emailAdress === "string",
@@ -112,6 +113,8 @@ let authController = {
                 "please enter a valid emailAdress"
             );
             assert(user.password.length > 0, "password may not be empty");
+
+            console.log("made it through");
             next();
         } catch (err) {
             res.status(400).json({
