@@ -3,6 +3,7 @@ const dbconnection = require("../../database/dbconnection");
 //TODO: add all inputs
 const assert = require("assert");
 const { type } = require("express/lib/response");
+const { doesNotMatch } = require("assert");
 
 let controller = {
     validateUser: (req, res, next) => {
@@ -21,7 +22,11 @@ let controller = {
             assert(typeof lastName === "string", "lastName must be a string");
             assert(typeof street === "string", "street must be a string");
             assert(typeof city === "string", "city must be a string");
-            assert(typeof password === "string", "password may not be empty");
+            assert(typeof password === "string", "password must be a string");
+            assert(
+                password.length > 5,
+                "password must be at least 6 characters long"
+            );
             next();
         } catch (err) {
             res.status(400).json({
@@ -64,14 +69,11 @@ let controller = {
                 ],
                 function (error, results, fields) {
                     if (error) {
-                        console.log(error);
                         res.status(409).json({
                             statusCode: 409,
                             message: `A user with emailAdres ${emailAdress} already exists`,
                         });
                     } else {
-                        console.log("result:");
-                        console.log(results[1]);
                         res.status(201).json({
                             statusCode: 201,
                             result: results[1],
