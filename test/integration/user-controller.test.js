@@ -631,7 +631,7 @@ describe("UC 202 deel 5", () => {
                     roles,
                     street,
                     city,
-                } = result[0];
+                } = result;
                 console.log(id);
                 id.should.be.a("number").that.equals(2);
                 firstName.should.be.a("string").that.equals("first2");
