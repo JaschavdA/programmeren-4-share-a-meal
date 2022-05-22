@@ -691,6 +691,33 @@ describe("UC 202 deel 5", () => {
                         "city"
                     );
 
+                res.body.result[0].id.should.be.a("number").that.equals(1);
+                res.body.result[0].firstName.should.be
+                    .a("string")
+                    .that.equals("first");
+                res.body.result[0].lastName.should.be
+                    .a("string")
+                    .that.equals("last");
+                res.body.result[0].isActive.should.equal(1);
+                res.body.result[0].emailAdress.should.be
+                    .a("string")
+                    .that.equals("name@server.nl");
+                res.body.result[0].password.should.be
+                    .a("string")
+                    .that.equals("secret");
+                res.body.result[0].phoneNumber.should.be
+                    .a("string")
+                    .that.equals("-");
+                res.body.result[0].roles.should.be
+                    .a("string")
+                    .that.equals("editor,guest");
+                res.body.result[0].street.should.be
+                    .a("string")
+                    .that.equals("street");
+                res.body.result[0].city.should.be
+                    .a("string")
+                    .that.equals("city");
+
                 done();
             })
             .catch((err) => done(err));
@@ -777,4 +804,4 @@ describe("UC 203 deel 1", () => {
     });
 });
 
-// describe("UC 203 deel 1", () => {});
+describe("UC 203 deel 1", () => {});
