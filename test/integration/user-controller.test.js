@@ -673,6 +673,7 @@ describe("UC 203 deel 1", () => {
     });
 });
 
+//
 it("TC-203-2 Valide token en gebruiker bestaat.", function (done) {
     chai.request(server)
         .get("/api/user/profile")
