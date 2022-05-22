@@ -81,11 +81,10 @@ let authController = {
             const token = authHeader.substring(7, authHeader.length);
             jwt.verify(token, jwtSecretKey, (err, payload) => {
                 if (err) {
-                    console.log(err);
                     res.status(401).json({
                         statusCode: 401,
                         message: "Invalid token",
-                        datetime: new Date().toISOString(),
+                        dateTime: new Date().toISOString(),
                     });
                 }
                 if (payload) {
