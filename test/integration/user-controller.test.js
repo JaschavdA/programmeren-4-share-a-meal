@@ -1121,7 +1121,7 @@ describe("UC 206 deel 1", () => {
     });
     it("TC-206-1 Gebruiker bestaat niet", function (done) {
         chai.request(server)
-            .put("/api/user/1")
+            .delete("/api/user/1")
             .send({
                 firstName: "Jan",
                 lastName: "Modaal",
