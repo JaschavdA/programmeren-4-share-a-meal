@@ -180,12 +180,12 @@ let controller = {
 
                     if (results.length > 0) {
                         res.status(200).json({
-                            status: 200,
+                            statusCode: 200,
                             result: results,
                         });
                     } else {
                         res.status(404).json({
-                            status: 404,
+                            statusCode: 404,
                             message: `User with id: ${id} was not found`,
                         });
                     }
@@ -228,18 +228,18 @@ let controller = {
                         // Handle error after the release.
                         if (error) {
                             res.status(409).json({
-                                status: 409,
+                                statusCode: 409,
                                 message:
                                     "There's already a user registered with this email address",
                             });
                         } else if (results.affectedRows > 0) {
                             res.status(200).json({
-                                status: 200,
+                                statusCode: 200,
                                 result: "User Successfully updated",
                             });
                         } else {
                             res.status(400).json({
-                                status: 400,
+                                statusCode: 400,
                                 message: `user with id: ${id} could not be found`,
                             });
                         }
@@ -274,12 +274,12 @@ let controller = {
 
                         if (results.affectedRows > 0) {
                             res.status(200).json({
-                                status: 200,
+                                statusCode: 200,
                                 message: `user with id: ${id} has been deleted`,
                             });
                         } else {
                             res.status(400).json({
-                                status: 400,
+                                statusCode: 400,
                                 message: `user with id: ${id} could not be found`,
                             });
                         }

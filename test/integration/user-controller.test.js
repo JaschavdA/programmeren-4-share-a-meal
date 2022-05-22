@@ -656,7 +656,7 @@ describe("UC 202 deel 4", () => {
 });
 
 describe("UC 202 deel 5", () => {
-    beforeEach((done) => {
+    before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
             connection.release();
@@ -759,6 +759,14 @@ describe("UC 203 deel 1", () => {
 });
 
 describe("UC 203 deel 1", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
+
+            done();
+        });
+    });
     it("TC-203-2 Valide token en gebruiker bestaat.", function (done) {
         chai.request(server)
             .get("/api/user/profile")
@@ -804,4 +812,125 @@ describe("UC 203 deel 1", () => {
     });
 });
 
-describe("UC 203 deel 1", () => {});
+describe("UC 204 deel 1", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-204-1 Ongeldig token", function (done) {
+        chai.request(server)
+            .get("/api/user/5")
+            .set({ Authorization: `Bearer henk` })
+            .then((res) => {
+                //There are no users with isActive equals false
+
+                res.should.have.status(401);
+
+                res.body.should.be
+                    .a("object")
+                    .that.has.all.keys("statusCode", "message", "dateTime");
+
+                const { statusCode, message, dateTime } = res.body;
+
+                statusCode.should.be.a("number").that.equals(401);
+                message.should.be.a("string").that.equals("Invalid token");
+                dateTime.should.be.a("string");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 204 deel 2", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
+
+            done();
+        });
+    });
+    it("TC-204-2 gebruiker bestaat niet", function (done) {
+        chai.request(server)
+            .get("/api/user/3")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                res.should.have.status(404);
+
+                res.body.should.be
+                    .an("object")
+                    .that.has.all.keys("statusCode", "message");
+                const { statusCode, message } = res.body;
+
+                statusCode.should.be.a("number").that.equals(404);
+                message.should.be
+                    .a("string")
+                    .that.equals("User with id: 3 was not found");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 203 deel 1", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
+
+            done();
+        });
+    });
+    it("TC-203-2 Valide token en gebruiker bestaat.", function (done) {
+        chai.request(server)
+            .get("/api/user/1")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                res.should.have.status(200);
+
+                res.body.should.be
+                    .an("object")
+                    .that.has.all.keys("statusCode", "result");
+                const { statusCode, result } = res.body;
+
+                result[0].should.be
+                    .a("object")
+                    .that.has.all.keys(
+                        "id",
+                        "firstName",
+                        "lastName",
+                        "isActive",
+                        "emailAdress",
+                        "password",
+                        "phoneNumber",
+                        "roles",
+                        "street",
+                        "city"
+                    );
+
+                result[0].id.should.be.a("number").that.equals(1);
+                result[0].firstName.should.be.a("string").that.equals("first");
+                result[0].lastName.should.be.a("string").that.equals("last");
+                result[0].isActive.should.equal(1);
+                result[0].emailAdress.should.be
+                    .a("string")
+                    .that.equals("name@server.nl");
+                result[0].password.should.be.a("string").that.equals("secret");
+                result[0].phoneNumber.should.be.a("string").that.equals("-");
+                result[0].roles.should.be
+                    .a("string")
+                    .that.equals("editor,guest");
+                result[0].street.should.be.a("string").that.equals("street");
+                result[0].city.should.be.a("string").that.equals("city");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
