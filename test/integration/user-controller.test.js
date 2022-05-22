@@ -6,6 +6,7 @@ const server = require("../../index");
 const assert = require("assert");
 require("dotenv").config();
 const dbconnection = require("../../database/dbconnection");
+const res = require("express/lib/response");
 
 chai.should();
 chai.use(chaiHttp);
