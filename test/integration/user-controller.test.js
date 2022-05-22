@@ -1007,44 +1007,6 @@ describe("UC 205 deel 1", () => {
 describe("UC 205 deel 3", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
-            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
-            connection.release();
-
-            done();
-        });
-    });
-    it("TC-205-1 gebruiker is geupdate", function (done) {
-        chai.request(server)
-            .put("/api/user/1")
-            .send({
-                firstName: "Jan",
-                lastName: "Modaal",
-                street: "Lovensdijkstraat 61",
-                city: "Breda",
-                password: "secret",
-                emailAdress: "j.modaal@server.com",
-                phoneNumber: "123456",
-            })
-            .set({ Authorization: `Bearer ${token}` })
-            .then((res) => {
-                res.should.have.status(200);
-                // res.body.message.should.be
-                //     .a("string")
-                //     .that.equals("Email must be a string");
-                console.log(res.body);
-                res.body.result.should.be
-                    .a("string")
-                    .that.equals("User Successfully updated");
-
-                done();
-            })
-            .catch((err) => done(err));
-    });
-});
-
-describe("UC 205 deel 3", () => {
-    before((done) => {
-        dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER2);
             connection.release();
 
@@ -1110,6 +1072,44 @@ describe("UC 205 deel 3", () => {
     });
 });
 
+describe("UC 205 deel 3", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
+
+            done();
+        });
+    });
+    it("TC-205-1 gebruiker is geupdate", function (done) {
+        chai.request(server)
+            .put("/api/user/1")
+            .send({
+                firstName: "Jan",
+                lastName: "Modaal",
+                street: "Lovensdijkstraat 61",
+                city: "Breda",
+                password: "secret",
+                emailAdress: "j.modaal@server.com",
+                phoneNumber: "123456",
+            })
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                res.should.have.status(200);
+                // res.body.message.should.be
+                //     .a("string")
+                //     .that.equals("Email must be a string");
+                console.log(res.body);
+                res.body.result.should.be
+                    .a("string")
+                    .that.equals("User Successfully updated");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
 describe("UC 206 deel 1", () => {
     before((done) => {
         dbconnection.getConnection(function (err, connection) {
@@ -1122,15 +1122,7 @@ describe("UC 206 deel 1", () => {
     it("TC-206-1 Gebruiker bestaat niet", function (done) {
         chai.request(server)
             .delete("/api/user/1")
-            .send({
-                firstName: "Jan",
-                lastName: "Modaal",
-                street: "Lovensdijkstraat 61",
-                city: "Breda",
-                password: "secret",
-                emailAdress: "j.modaal@server.com",
-                phoneNumber: "123456",
-            })
+
             .set({ Authorization: `Bearer ${token}` })
             .then((res) => {
                 console.log(res.body);
@@ -1139,6 +1131,82 @@ describe("UC 206 deel 1", () => {
                     .a("string")
                     .that.equals("user with id: 1 could not be found");
 
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 206 deel 2", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER2);
+            connection.release();
+
+            done();
+        });
+    });
+    it("TC-206-2 niet ingelogd", function (done) {
+        chai.request(server)
+            .delete("/api/user/1")
+            .set({ Authorization: `Bearer ` })
+            .then((res) => {
+                res.should.have.status(401);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("Invalid token");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 206 deel 3", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER2);
+            connection.release();
+
+            done();
+        });
+    });
+    it("TC-206-2 niet eigenaar", function (done) {
+        chai.request(server)
+            .delete("/api/user/2")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                res.should.have.status(403);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("You may only delete your own account");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 206 deel 4", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            connection.release();
+
+            done();
+        });
+    });
+    it("TC-206-2 sucess verwijdert", function (done) {
+        chai.request(server)
+            .delete("/api/user/1")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                res.should.have.status(200);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("user with id: 1 has been deleted");
+
+                console.log(res.body);
                 done();
             })
             .catch((err) => done(err));
