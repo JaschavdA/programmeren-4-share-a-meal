@@ -52,14 +52,15 @@ const INSERT_MEALS =
 //     done();
 // });
 
-describe("UC 201 Registreren als nieuwe gebruiker", () => {
-    beforeEach((done) => {
+describe("UC 201 Registreren als nieuwe gebruiker deel 1", () => {
+    before((done) => {
         dbconnection.getConnection(function (err, connection) {
             connection.query(CLEAR_DB + INSERT_USER);
             connection.release();
             done();
         });
     });
+
     it("TC-201-1-1 Verplicht veld ontbreekt", function (done) {
         chai.request(server)
             .post("/api/user/")
@@ -85,31 +86,51 @@ describe("UC 201 Registreren als nieuwe gebruiker", () => {
                 done();
             });
     });
+});
 
-    it("TC-201-1-2 Verplicht veld ontbreekt", function (done) {
-        chai.request(server)
-            .post("/api/user/")
-            .send({
-                firstName: "Jan",
-                // lastName: "Modaal",
-                street: "Lovensdijkstraat 61",
-                city: "Breda",
-                password: "secret",
-                emailAdress: "j.modaal@server.com",
-            })
-            .end((err, res) => {
-                res.should.have.status(400);
-                res.body.should.be
-                    .an("object")
-                    .that.has.all.keys("statusCode", "message");
-                const { statusCode, message } = res.body;
-                statusCode.should.be.a("number");
-                statusCode.should.equal(400);
-                message.should.be.a("string");
-                message.should.equal("lastName must be a string");
+describe("UC 201 Registreren als nieuwe gebruiker deel 2", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
 
-                done();
-            });
+        it("TC-201-1-2 Verplicht veld ontbreekt", function (done) {
+            chai.request(server)
+                .post("/api/user/")
+                .send({
+                    firstName: "Jan",
+                    // lastName: "Modaal",
+                    street: "Lovensdijkstraat 61",
+                    city: "Breda",
+                    password: "secret",
+                    emailAdress: "j.modaal@server.com",
+                })
+                .end((err, res) => {
+                    res.should.have.status(400);
+                    res.body.should.be
+                        .an("object")
+                        .that.has.all.keys("statusCode", "message");
+                    const { statusCode, message } = res.body;
+                    statusCode.should.be.a("number");
+                    statusCode.should.equal(400);
+                    message.should.be.a("string");
+                    message.should.equal("lastName must be a string");
+
+                    done();
+                });
+        });
+    });
+});
+
+describe("UC 201 Registreren als nieuwe gebruiker deel 3", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
     });
 
     it("TC-201-1-3 Verplicht veld ontbreekt", function (done) {
@@ -137,6 +158,16 @@ describe("UC 201 Registreren als nieuwe gebruiker", () => {
                 done();
             });
     });
+});
+
+describe("UC 201 Registreren als nieuwe gebruiker deel 4", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
 
     it("TC-201-1-4 Verplicht veld ontbreekt", function (done) {
         chai.request(server)
@@ -162,6 +193,16 @@ describe("UC 201 Registreren als nieuwe gebruiker", () => {
 
                 done();
             });
+    });
+});
+
+describe("UC 201 Registreren als nieuwe gebruiker deel 5", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
     });
 
     it("TC-201-1-5 Verplicht veld ontbreekt", function (done) {
@@ -190,6 +231,16 @@ describe("UC 201 Registreren als nieuwe gebruiker", () => {
                 done();
             });
     });
+});
+
+describe("UC 201 Registreren als nieuwe gebruiker deel 6", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
 
     it("TC-201-2 Niet-valide email adres", function (done) {
         chai.request(server)
@@ -215,6 +266,16 @@ describe("UC 201 Registreren als nieuwe gebruiker", () => {
 
                 done();
             });
+    });
+});
+
+describe("UC 201 Registreren als nieuwe gebruiker deel 7", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
     });
 
     it("TC-201-3 Niet-valide wachtwoord", function (done) {
@@ -243,6 +304,16 @@ describe("UC 201 Registreren als nieuwe gebruiker", () => {
 
                 done();
             });
+    });
+});
+
+describe("UC 201 Registreren als nieuwe gebruiker deel 8", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
     });
 
     it("TC-201-4 Gebruiker bestaat al", function (done) {
@@ -294,14 +365,7 @@ describe("UC 201 Registreren als nieuwe gebruiker", () => {
 //     });
 // });
 
-describe("UC 201 Registreren als nieuwe gebruiker deel 2", () => {
-    // before((done) => {
-    //     dbconnection.getConnection(function (err, connection) {
-    //         connection.query(CLEAR_DB);
-    //         done();
-    //     });
-    // });
-
+describe("UC 201 Registreren als nieuwe gebruiker deel 9", () => {
     it("TC-201-5 Gebruiker succesvol geregistreerd", function (done) {
         chai.request(server)
             .post("/api/user/")
@@ -659,32 +723,11 @@ describe("UC 203 deel 1", () => {
 });
 
 describe("UC 203 deel 1", () => {
-    // before((done) => {
-    //     dbconnection.getConnection(function (err, connection) {
-    //         connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
-    //         done();
-    //     });
-    // });
     it("TC-203-2 Valide token en gebruiker bestaat.", function (done) {
         chai.request(server)
             .get("/api/user/profile")
             .set({ Authorization: `Bearer ${token}` })
             .then((res) => {
-                // {
-                //     statusCode: 200,
-                //     result: {
-                //       id: 1,
-                //       firstName: 'first',
-                //       lastName: 'last',
-                //       isActive: 1,
-                //       emailAdress: 'name@server.nl',
-                //       password: 'secret',
-                //       phoneNumber: '-',
-                //       roles: 'editor,guest',
-                //       street: 'street',
-                //       city: 'city'
-                //     }
-
                 res.should.have.status(200);
 
                 res.body.should.be
@@ -724,3 +767,5 @@ describe("UC 203 deel 1", () => {
             .catch((err) => done(err));
     });
 });
+
+describe("UC 203 deel 1", () => {});
