@@ -473,3 +473,166 @@ describe("UC 202 deel 2", () => {
             .catch((err) => done(err));
     });
 });
+
+describe("UC 202 deel 3", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            done();
+        });
+    });
+
+    it("TC-202-3 Toon gebruikers met zoekterm op niet-bestaande naam ", function (done) {
+        chai.request(server)
+            .get("/api/user?firstName=Henk")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                res.should.have.status(200);
+                res.body.result.length.should.equal(0);
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 202 deel 4", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            done();
+        });
+    });
+
+    it("TC-202-4 Toon gebruikers met gebruik van de zoekterm op het veld ‘isActive’=false", function (done) {
+        chai.request(server)
+            .get("/api/user?isActive=0")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                //There are no users with isActive equals false
+                res.should.have.status(200);
+                res.body.result.length.should.equal(0);
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 202 deel 4", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            done();
+        });
+    });
+
+    it("TC-202-5 Toon gebruikers met gebruik van de zoekterm op het veld ‘isActive’=true", function (done) {
+        chai.request(server)
+            .get("/api/user?isActive=1")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                //There are no users with isActive equals false
+                res.should.have.status(200);
+                res.body.should.be
+                    .an("object")
+                    .that.has.all.keys("statusCode", "result");
+                const { statusCode, result } = res.body;
+                result[0].should.be
+                    .a("object")
+                    .that.has.all.keys(
+                        "id",
+                        "firstName",
+                        "lastName",
+                        "isActive",
+                        "emailAdress",
+                        "password",
+                        "phoneNumber",
+                        "roles",
+                        "street",
+                        "city"
+                    );
+
+                const {
+                    id,
+                    firstName,
+                    lastName,
+                    isActive,
+                    emailAdress,
+                    password,
+                    phoneNumber,
+                    roles,
+                    street,
+                    city,
+                } = result[0];
+                id.should.be.a("number").that.equals(1);
+                firstName.should.be.a("string").that.equals("first");
+                lastName.should.be.a("string").that.equals("last");
+                isActive.should.equal(1);
+                emailAdress.should.be.a("string").that.equals("name@server.nl");
+                password.should.be.a("string").that.equals("secret");
+                phoneNumber.should.be.a("string").that.equals("-");
+                roles.should.be.a("string").that.equals("editor,guest");
+                street.should.be.a("string").that.equals("street");
+                city.should.be.a("string").that.equals("city");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
+
+describe("UC 202 deel 5", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER + INSERT_USER2);
+            done();
+        });
+    });
+
+    it("TC-202-6 Toon gebruikers met zoekterm op bestaande naam (max op 2 velden filteren)", function (done) {
+        chai.request(server)
+            .get("/api/user?firstName=first2&isActive=1")
+            .set({ Authorization: `Bearer ${token}` })
+            .then((res) => {
+                //There are no users with isActive equals false
+                res.should.have.status(200);
+                res.body.should.be
+                    .an("object")
+                    .that.has.all.keys("statusCode", "result");
+                const { statusCode, result } = res.body;
+                result[0].should.be
+                    .a("object")
+                    .that.has.all.keys(
+                        "id",
+                        "firstName",
+                        "lastName",
+                        "isActive",
+                        "emailAdress",
+                        "password",
+                        "phoneNumber",
+                        "roles",
+                        "street",
+                        "city"
+                    );
+
+                result[0].id.should.be.a("number").that.equals(2);
+                result[0].firstName.should.be.a("string").that.equals("first2");
+                result[0].lastName.should.be.a("string").that.equals("last2");
+                result[0].isActive.should.equal(1);
+                result[0].emailAdress.should.be
+                    .a("string")
+                    .that.equals("name@server2.nl");
+                result[0].password.should.be.a("string").that.equals("secret2");
+                result[0].phoneNumber.should.be.a("string").that.equals("-");
+                result[0].roles.should.be
+                    .a("string")
+                    .that.equals("editor,guest");
+                result[0].street.should.be.a("string").that.equals("street2");
+                result[0].city.should.be.a("string").that.equals("city2");
+
+                done();
+            })
+            .catch((err) => done(err));
+    });
+});
