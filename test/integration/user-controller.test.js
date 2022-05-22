@@ -620,7 +620,7 @@ describe("UC 202 deel 5", () => {
                     );
                 // //
 
-                console.log(result[0]);
+                console.log(result[0].id);
                 // result[0].id.should.be.a("number").that.equals(2);
                 // result[0].firstName.should.be.a("string").that.equals("first2");
                 // result[0].lastName.should.be.a("string").that.equals("last2");
