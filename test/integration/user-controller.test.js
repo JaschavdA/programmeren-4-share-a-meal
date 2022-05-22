@@ -620,21 +620,31 @@ describe("UC 202 deel 5", () => {
                     );
                 // //
 
-                console.log(result[0].id);
-                // result[0].id.should.be.a("number").that.equals(2);
-                // result[0].firstName.should.be.a("string").that.equals("first2");
-                // result[0].lastName.should.be.a("string").that.equals("last2");
-                // result[0].isActive.should.equal(1);
-                // result[0].emailAdress.should.be
-                //     .a("string")
-                //     .that.equals("name@server2.nl");
-                // result[0].password.should.be.a("string").that.equals("secret2");
-                // result[0].phoneNumber.should.be.a("string").that.equals("-");
-                // result[0].roles.should.be
-                //     .a("string")
-                //     .that.equals("editor,guest");
-                // result[0].street.should.be.a("string").that.equals("street2");
-                // result[0].city.should.be.a("string").that.equals("city2");
+                const {
+                    id,
+                    firstName,
+                    lastName,
+                    isActive,
+                    emailAdress,
+                    password,
+                    phoneNumber,
+                    roles,
+                    street,
+                    city,
+                } = result[0];
+                console.log(id);
+                id.should.be.a("number").that.equals(2);
+                firstName.should.be.a("string").that.equals("first2");
+                lastName.should.be.a("string").that.equals("last2");
+                isActive.should.equal(1);
+                emailAdress.should.be
+                    .a("string")
+                    .that.equals("name@server2.nl");
+                password.should.be.a("string").that.equals("secret2");
+                phoneNumber.should.be.a("string").that.equals("-");
+                roles.should.be.a("string").that.equals("editor,guest");
+                street.should.be.a("string").that.equals("street2");
+                city.should.be.a("string").that.equals("city2");
 
                 done();
             })
