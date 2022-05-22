@@ -660,7 +660,7 @@ describe("UC 202 deel 5", () => {
 
     it("TC-202-6 Toon gebruikers met zoekterm op bestaande naam (max op 2 velden filteren)", function (done) {
         chai.request(server)
-            .get("/api/user?firstName=first2&isActive=1")
+            .get("/api/user?firstName=Marieke&isActive=1")
             .set({ Authorization: `Bearer ${token}` })
             .then((res) => {
                 //There are no users with isActive equals false
@@ -668,7 +668,6 @@ describe("UC 202 deel 5", () => {
                 res.body.should.be
                     .an("object")
                     .that.has.all.keys("statusCode", "result");
-                const { statusCode, result } = res.body;
                 console.log(res.body.result);
                 res.body.result[0].should.be
                     .a("object")
