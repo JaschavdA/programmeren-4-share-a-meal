@@ -11,6 +11,7 @@ const { getPriority } = require("os");
 const jwtSecretKey = process.env.JWT_Key;
 const jwt = require("jsonwebtoken");
 const { beforeEach } = require("mocha");
+const { type } = require("express/lib/response");
 
 chai.should();
 chai.use(chaiHttp);
@@ -1210,5 +1211,151 @@ describe("UC 206 deel 4", () => {
                 done();
             })
             .catch((err) => done(err));
+    });
+});
+
+describe("UC 301 maaltijd aanmaken deel 1", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-203-1 Verplicht veld ontbreekt", function (done) {
+        chai.request(server)
+            .post("/api/meal/")
+            .set({ Authorization: `Bearer ${token}` })
+            .send({
+                name: "Krabbenburger",
+                // description: "De legendarische Krabbenburger, gemaakt met aan hand van het begaarde geheime recept van de Krokante Krab",
+                isActive: 1,
+                isVega: 1,
+                isVegan: 1,
+                isToTakeHome: 1,
+                dateTime: "2022-05-21T11:13:11.932Z",
+                imageUrl:
+                    "https://i1.sndcdn.com/artworks-uYTqpAuEizvDbNvj-xNF8sw-t500x500.jpg",
+                allergenes: ["gluten", "noten", "lactose"],
+                maxAmountOfParticipants: 6,
+                price: 6.75,
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("description must be a string");
+
+                done();
+            });
+    });
+});
+
+describe("UC 301 maaltijd aanmaken deel 2", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-203-2 niet ingelogd", function (done) {
+        chai.request(server)
+            .post("/api/meal/")
+            // .set({ Authorization: `Bearer ${token}` })
+            .send({
+                name: "Krabbenburger",
+                description:
+                    "De legendarische Krabbenburger, gemaakt met aan hand van het begaarde geheime recept van de Krokante Krab",
+                isActive: 1,
+                isVega: 1,
+                isVegan: 1,
+                isToTakeHome: 1,
+                dateTime: "2022-05-21T11:13:11.932Z",
+                imageUrl:
+                    "https://i1.sndcdn.com/artworks-uYTqpAuEizvDbNvj-xNF8sw-t500x500.jpg",
+                allergenes: ["gluten", "noten", "lactose"],
+                maxAmountOfParticipants: 6,
+                price: 6.75,
+            })
+            .end((err, res) => {
+                res.should.have.status(401);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("Authorization header missing!");
+
+                done();
+            });
+    });
+});
+
+describe("UC 301 maaltijd aanmaken deel 3", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-203-3 toegevoegd", function (done) {
+        chai.request(server)
+            .post("/api/meal/")
+            .set({ Authorization: `Bearer ${token}` })
+            .send({
+                name: "Krabbenburger",
+                description:
+                    "De legendarische Krabbenburger, gemaakt met aan hand van het begaarde geheime recept van de Krokante Krab",
+                isActive: 1,
+                isVega: 1,
+                isVegan: 1,
+                isToTakeHome: 1,
+                dateTime: "2022-05-21T11:13:11.932Z",
+                imageUrl:
+                    "https://i1.sndcdn.com/artworks-uYTqpAuEizvDbNvj-xNF8sw-t500x500.jpg",
+                allergenes: ["gluten", "noten", "lactose"],
+                maxAmountOfParticipants: 6,
+                price: 6.75,
+            })
+            .end((err, res) => {
+                res.should.have.status(201);
+                const { statusCode, result } = res.body;
+
+                console.log(result[0]);
+
+                result[0].id.should.be.a("number");
+                result[0].isActive.should.be.a("number").that.equals(1);
+                result[0].isVega.should.be.a("number").that.equals(1);
+                result[0].isVegan.should.be.a("number").that.equals(1);
+                result[0].isToTakeHome.should.be.a("number").that.equals(1);
+                result[0].dateTime.should.be.a("string");
+                result[0].maxAmountOfParticipants.should.be
+                    .a("number")
+                    .that.equals(6);
+                result[0].price.should.be.a("string").that.equals("6.75");
+                result[0].imageUrl.should.be
+                    .a("string")
+                    .that.equals(
+                        "https://i1.sndcdn.com/artworks-uYTqpAuEizvDbNvj-xNF8sw-t500x500.jpg"
+                    );
+                result[0].cookId.should.be.a("number").that.equals(1);
+                result[0].createDate.should.be.a("string");
+                result[0].createDate.should.be.a("string");
+                result[0].name.should.be
+                    .a("string")
+                    .that.equals("Krabbenburger");
+                result[0].description.should.be
+                    .a("string")
+                    .that.equals(
+                        "De legendarische Krabbenburger, gemaakt met aan hand van het begaarde geheime recept van de Krokante Krab"
+                    );
+                result[0].allergenes.should.be
+                    .a("string")
+                    .that.equals("gluten,lactose,noten");
+
+                done();
+            });
     });
 });
