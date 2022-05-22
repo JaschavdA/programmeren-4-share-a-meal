@@ -23,47 +23,48 @@ let authController = {
                 "SELECT id, emailAdress, password, firstName, lastName FROM user WHERE emailAdress = ?",
                 [emailAdress],
                 function (error, results, fields) {
+                    connection.release;
                     if (error) {
                         console.log(error);
                     }
-                    connection.release;
-                    const returnedEmail = results[0].emailAdress;
-                    const returnedPassword = results[0].password;
-                    const userID = results[0].id;
-                    console.log(returnedEmail);
-                    console.log(returnedPassword);
-                    console.log(userID);
-                    //Since we search for the user by their email it is not needed to test if the email is the same during the password validation
-                    if (!returnedEmail) {
+
+                    if (results.length < 1) {
                         res.status(404).json({
                             statusCode: 404,
                             message: `User with emailAdres ${emailAdress} has not been found`,
                         });
-                    }
-                    //Since we search for the user by their email it is not needed to test if the email is the same during the password validation because it will always be the same
-                    if (password === returnedPassword) {
-                        const payload = { id: userID };
-                        const userinfo = results[0];
-                        jwt.sign(
-                            payload,
-                            jwtSecretKey,
-                            { expiresIn: "12d" },
-                            function (err, token) {
-                                if (err) {
-                                    console.log(error);
-                                }
-                                console.log(jwtSecretKey);
-                                res.status(200).json({
-                                    statusCode: 200,
-                                    results: { ...userinfo, token },
-                                });
-                            }
-                        );
                     } else {
-                        res.status(400).json({
-                            statusCode: 400,
-                            message: "email or password is not correct",
-                        });
+                        const returnedEmail = results[0].emailAdress;
+                        const returnedPassword = results[0].password;
+                        const userID = results[0].id;
+
+                        //Since we search for the user by their email it is not needed to test if the email is the same during the password validation
+
+                        //Since we search for the user by their email it is not needed to test if the email is the same during the password validation because it will always be the same
+                        if (password === returnedPassword) {
+                            const payload = { id: userID };
+                            const userinfo = results[0];
+                            jwt.sign(
+                                payload,
+                                jwtSecretKey,
+                                { expiresIn: "12d" },
+                                function (err, token) {
+                                    if (err) {
+                                        console.log(error);
+                                    }
+
+                                    res.status(200).json({
+                                        statusCode: 200,
+                                        results: { ...userinfo, token },
+                                    });
+                                }
+                            );
+                        } else {
+                            res.status(400).json({
+                                statusCode: 400,
+                                message: "email or password is not correct",
+                            });
+                        }
                     }
                 }
             );

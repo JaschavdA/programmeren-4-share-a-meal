@@ -44,10 +44,7 @@ const INSERT_USER2 =
  * Query om twee meals toe te voegen. Let op de cookId, die moet matchen
  * met een bestaande user in de database.
  */
-const INSERT_MEALS =
-    "INSERT INTO `meal` (`id`, `name`, `description`, `imageUrl`, `dateTime`, `maxAmountOfParticipants`, `price`, `cookId`) VALUES" +
-    "(1, 'Meal A', 'description', 'image url', NOW(), 5, 6.50, 1)," +
-    "(2, 'Meal B', 'description', 'image url', NOW(), 5, 6.50, 1);";
+const INSERT_MEALS = `INSERT INTO meal (id, isActive, isVega, isVegan, isToTakeHome, dateTime, maxAmountOfParticipants, price, imageUrl, cookId, createDate, updateDate, name, description, allergenes) VALUES (1, 1, 1, 1, 1, '2022-05-22T20:06:49.131Z', 1, 1, 'test.nl', 1, '2022-05-22T20:06:49.131Z', '2022-05-22T20:06:49.131Z', 'test', 'test', 'gluten,lactose,noten');`;
 
 // it("this is a test", (done) => {
 //     assert.equal(true, true);
@@ -1300,7 +1297,7 @@ describe("UC 301 maaltijd aanmaken deel 3", () => {
         });
     });
 
-    it("TC-203-3 toegevoegd", function (done) {
+    it("TC-303-3 toegevoegd", function (done) {
         chai.request(server)
             .post("/api/meal/")
             .set({ Authorization: `Bearer ${token}` })
@@ -1322,8 +1319,6 @@ describe("UC 301 maaltijd aanmaken deel 3", () => {
             .end((err, res) => {
                 res.should.have.status(201);
                 const { statusCode, result } = res.body;
-
-                console.log(result[0]);
 
                 result[0].id.should.be.a("number");
                 result[0].isActive.should.be.a("number").that.equals(1);
@@ -1354,6 +1349,224 @@ describe("UC 301 maaltijd aanmaken deel 3", () => {
                 result[0].allergenes.should.be
                     .a("string")
                     .that.equals("gluten,lactose,noten");
+
+                console.log(new Date());
+
+                done();
+            });
+    });
+});
+
+// It seems to be impossible to insert a meal with an ID added to it.
+// describe("UC 304 maaltijd opvragen deel 1", () => {
+//     before((done) => {
+//         dbconnection.getConnection(function (err, connection) {
+//             connection.query(CLEAR_DB + INSERT_USER + INSERT_MEALS);
+//             connection.release();
+//             done();
+//         });
+//     });
+
+//     it("TC-304-1 sucess opgehaald", function (done) {
+//         chai.request(server)
+//             .get("/api/meal/")
+//             .set({ Authorization: `Bearer ${token}` })
+
+//             .end((err, res) => {
+//                 console.log(res.body);
+//                 done();
+//             });
+//     });
+// });
+
+// describe("UC 304 maaltijd opvragen deel 2", () => {
+//     before((done) => {
+//         dbconnection.getConnection(function (err, connection) {
+//             connection.query(CLEAR_DB + INSERT_USER + INSERT_MEALS);
+//             connection.release();
+//             done();
+//         });
+//     });
+
+//     it("TC-304-2 niet gevonden", function (done) {
+//         chai.request(server)
+//             .get("/api/meal/2")
+//             .set({ Authorization: `Bearer ${token}` })
+
+//             .end((err, res) => {
+//                 console.log(res.body);
+//                 done();
+//             });
+//     });
+// });
+
+// describe("UC 206 deel 1", () => {
+//     before((done) => {
+//         dbconnection.getConnection(function (err, connection) {
+//             connection.query(CLEAR_DB + INSERT_USER, INSERT_MEALS);
+//             connection.release();
+
+//             done();
+//         });
+//     });
+//     it("TC-206-1 Gebruiker bestaat niet", function (done) {
+//         chai.request(server)
+//             .delete("/api/user/1")
+
+//             .set({ Authorization: `Bearer ${token}` })
+//             .then((res) => {
+//                 console.log(res.body);
+//                 res.should.have.status(400);
+//                 res.body.message.should.be
+//                     .a("string")
+//                     .that.equals("user with id: 1 could not be found");
+
+//                 done();
+//             })
+//             .catch((err) => done(err));
+//     });
+// });
+
+describe("UC 101 inloggen deel 1", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-101-1 Verplicht veld ontbreekt", function (done) {
+        chai.request(server)
+            .post("/api/auth/login")
+            .send({
+                // emailAdress: "name@server.nl",
+                password: "secret",
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("Email must be a string");
+
+                done();
+            });
+    });
+});
+
+describe("UC 101 inloggen deel 2", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-101-2 email niet valide", function (done) {
+        chai.request(server)
+            .post("/api/auth/login")
+            .send({
+                emailAdress: "google.com",
+                password: "secret",
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("please enter a valid emailAdress");
+
+                done();
+            });
+    });
+});
+
+describe("UC 101 inloggen deel 3", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-101-3 wachtwoord niet valide", function (done) {
+        chai.request(server)
+            .post("/api/auth/login")
+            .send({
+                emailAdress: "henk@gmail.com",
+                password: "",
+            })
+            .end((err, res) => {
+                res.should.have.status(400);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals("password may not be empty");
+
+                done();
+            });
+    });
+});
+
+describe("UC 101 inloggen deel 4", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-101-4 gebruiker bestaat niet", function (done) {
+        chai.request(server)
+            .post("/api/auth/login")
+            .send({
+                emailAdress: "henk@gmail.com",
+                password: "secret",
+            })
+            .end((err, res) => {
+                console.log(res.body);
+                res.should.have.status(404);
+                res.body.message.should.be
+                    .a("string")
+                    .that.equals(
+                        "User with emailAdres henk@gmail.com has not been found"
+                    );
+
+                done();
+            });
+    });
+});
+
+describe("UC 101 inloggen deel 5", () => {
+    before((done) => {
+        dbconnection.getConnection(function (err, connection) {
+            connection.query(CLEAR_DB + INSERT_USER);
+            connection.release();
+            done();
+        });
+    });
+
+    it("TC-101-3 login success", function (done) {
+        chai.request(server)
+            .post("/api/auth/login")
+            .send({
+                emailAdress: "name@server.nl",
+                password: "secret",
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
+
+                let { statusCode, results } = res.body;
+
+                results.id.should.be.a("number").that.equals(1);
+                results.emailAdress.should.be
+                    .a("string")
+                    .that.equals("name@server.nl");
+                results.password.should.be.a("string").that.equals("secret");
+                results.firstName.should.be.a("string").that.equals("first");
+                results.lastName.should.be.a("string").that.equals("last");
+                results.token.should.be.a("string");
 
                 done();
             });
