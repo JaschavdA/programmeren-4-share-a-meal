@@ -38,7 +38,7 @@ let authController = {
                         const returnedPassword = results[0].password;
                         const userID = results[0].id;
 
-                        //Since we search for the user by their email it is not needed to test if the email is the same during the password validation
+                        //Since we search for the user by their email it is not needed to test if the email is the same during the password validation 4
 
                         //Since we search for the user by their email it is not needed to test if the email is the same during the password validation because it will always be the same
                         if (password === returnedPassword) {

@@ -44,12 +44,10 @@ Hier volgen de ondersteunde API calls, JSON objecten die je (eventueel) mee moet
 
 /api/user/login
 
-````javascript
-{
-    "emailAdress": "j.modaal@server.com",
-    "password": "secret"
+````{
+"emailAdress": "j.modaal@server.com",
+"password": "secret"
 }```
-
 
 ## Add your files
 
@@ -148,4 +146,8 @@ For open source projects, say how it is licensed.
 ## Project status
 
 If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+```
+
+```
+
 ```
