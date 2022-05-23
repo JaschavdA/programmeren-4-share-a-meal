@@ -4,7 +4,7 @@
 
 Dit is een node js API server is gemaakt als opdracht voor de opleiding Informatica bij Avans Hogeschool te Breda. Deze API server heeft op het moment twee typen objecten, gebruikers en maaltijden.
 
-De server bied de mogelijkheid om:
+De server biedt de mogelijkheid om:
 
 -   Een user/meal aan te maken
 -   In te loggen
@@ -15,139 +15,50 @@ De server bied de mogelijkheid om:
 
 De server maakt gebruik van authenticatie aan hand van [JSON Web Tokens](https://jwt.io) om ervoor te zorgen dat alle methodes behalve het aanmaken/inloggen van een user, en het opvragen van meals enkel door een bestaande gebruiker kunnen worden uitgevoerd. Verder zorgt de authenticatie ervoor dat een user enkel zijn/haar eigen gegevens kan wijzigen.
 
-Indien je deze API wilt uitproberen voordat je hem zelf instaleerd is een versie van deze API beschikbaar via de base-url : https://share-a-meal-2022.herokuapp.com/
+Als je deze API wilt uitproberen voordat je hem zelf installeert is een versie van deze API beschikbaar via de base-url : https://share-a-meal-2022.herokuapp.com/
 
 ## Instalatie
 
-Als je de server locaal wilt runnen is het nodig om de volgende programmas geinstaleerd te hebben:
+Als je de server lokaal wilt runnen is het nodig om de volgende programma’s geïnstalleerd te hebben:
 
 -   [NodeJS](https://nodejs.org/en/)
 -   [XAMPP] (https://www.apachefriends.org/index.html) voor de MySQL database
 -   [Postman](https://www.postman.com) voor het aanroeppen van de API
 
-Als je deze programmas wilt installeren kun je dit doen door in de volgende stappen:
+Als je deze programma’s wilt installeren kun je dit doen door in de volgende stappen:
 
 1. Download het zip bestand van deze repo
 2. Pak dit bestand uit waar je de installatie wilt hebben
 3. Navigeer met de command prompt (of andere CLI als je die hebt) naar de uitgepakte volder
 4. Run de command "npm install" in de command prompt
 
-Indien je locaal GIT hebt geinstaleerd kun je stap 1 en 2 vervangen door de repo te clonen.
+Als je lokaal GIT hebt geïnstalleerd kun je stap 1 en 2 vervangen door de repo te clonen.
 
 Opmerking: Deze server is enkel getest op Windows 11
 
 ## Gebruik
 
-Hier volgen de ondersteunde API calls, JSON objecten die je (eventueel) mee moet sturen en een voorbeeld van een response, de items in de JSON objecten zijn verplicht, indien deze niet meegestuurd worden zal een foutmelding teruggestuurd worden.
+Hier volgen de ondersteunde API calls, JSON objecten die je (eventueel) mee moet sturen en een voorbeeld van een response, de items in de JSON objecten zijn verplicht, als deze niet meegestuurd worden zal een foutmelding teruggestuurd worden (bij requests waar een token voor nodig is wordt ervan uitgegaan dat deze is toegevoegd).
 
-###
-
-/api/user/login
-
-````{
-"emailAdress": "j.modaal@server.com",
-"password": "secret"
-}```
-
-## Add your files
-
--   [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
--   [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
-
-````
-
-cd existing_repo
-git remote add origin https://gitlab.com/rschellius/programmeren-4-sam-server.git
-git branch -M main
-git push -uf origin main
-
-```
-
-## Integrate with your tools
-
--   [ ] [Set up project integrations](https://gitlab.com/rschellius/programmeren-4-sam-server/-/settings/integrations)
-
-## Collaborate with your team
-
--   [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
--   [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
--   [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
--   [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
--   [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
-
-## Test and Deploy
-
-Use the built-in continuous integration in GitLab.
-
--   [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
--   [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
--   [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
--   [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
--   [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
-
----
-
-# Editing this README
-
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-
-Choose a self-explaining name for your project.
-
-## Description
-
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Een overzicht van alle API calls samen met voorbeelddata is te vinden in dit GoogleDocs document:
+https://docs.google.com/document/d/1PVPy2GyWRQYvly5arEWQ70EA4ltfdhA2uCqGyYHEUvw/edit?usp=sharing
 
 ## Support
 
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Op dit moment wordt deze API niet actief ontwikkeld of onderhouden. Mocht dit veranderen dan wordt hier een email toegevoegd waar je mogelijke vragen naar toe kunt sturen. Deze zullen dan zo snel mogelijk worden beantwoord.
 
 ## Roadmap
 
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Op dit moment wordt deze API niet actief ontwikkeld. Als dit verandert wil ik de mogelijkheid om je aan of af te melden voor een maaltijd toevoegen. Ook wil ik ervoor zorgen dat wachtwoorden versleuteld worden (dat is op het moment nog niet het geval)
 
-## Contributing
+## Contributie
 
-State if you are open to contributions and what your requirements are for accepting them.
+Dit project staat niet open voor veranderingen op deze repo. Als je deze API wilt veranderen kan dat in een eigen repository.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+## Auteurs
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-
-Show your appreciation to those who have contributed to the project.
-
-## License
-
-For open source projects, say how it is licensed.
+Deze API is gemaakt door Jascha van der Ark. Delen van deze code zijn overgenomen uit voorbeeld code die is gemaakt door Robin Schellius en Davide Ambesi
 
 ## Project status
 
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
-```
-
-```
-
-```
+Dit project wordt op het moment niet actief ontwikkeld
