@@ -22,7 +22,7 @@ Als je deze API wilt uitproberen voordat je hem zelf installeert is een versie v
 Als je de server lokaal wilt runnen is het nodig om de volgende programma’s geïnstalleerd te hebben:
 
 -   [NodeJS](https://nodejs.org/en/)
--   [XAMPP] (https://www.apachefriends.org/index.html) voor de MySQL database
+-   [XAMPP](https://www.apachefriends.org/index.html) voor de MySQL database
 -   [Postman](https://www.postman.com) voor het aanroeppen van de API
 
 Als je deze programma’s wilt installeren kun je dit doen door in de volgende stappen:
